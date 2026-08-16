@@ -80,10 +80,18 @@ const applyPriceFilterBtnMobile = document.getElementById('applyPriceFilterBtnMo
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   checkScraperStatus();
-  
+  fetchFacets(); // Carga las facetas inicialmente para que los filtros de móvil y desktop no estén vacíos
   
   setInterval(checkScraperStatus, 15000);
 });
+
+// Enfoca el buscador principal y hace scroll hacia él en móvil
+function focusSearch() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    searchInput.focus();
+  }, 300);
+}
 
 
 function setupEventListeners() {
@@ -599,15 +607,15 @@ function renderExplore(products, pagination) {
     
     if (index === 6) {
       const sponsoredCard = document.createElement('div');
-      sponsoredCard.className = 'col-span-2 md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 overflow-hidden relative shadow-md';
+      sponsoredCard.className = 'col-span-2 md:col-span-3 relative rounded-2xl border border-zinc-800 overflow-hidden min-h-[140px] flex items-center p-6 group';
       sponsoredCard.innerHTML = `
-        <div class="absolute inset-0 bg-gradient-to-r from-purpleDark/20 to-transparent z-0"></div>
-        <div class="z-10 max-w-lg">
-          <span class="text-[9px] font-extrabold text-pink-400 bg-pink-500/10 px-2 py-0.5 rounded border border-pink-500/20 uppercase tracking-widest">Patrocinado</span>
-          <h3 class="text-base font-extrabold text-white mt-2">¿Estás buscando herramientas profesionales para soldadura?</h3>
-          <p class="text-zinc-400 text-xs mt-1">Encontrá el mejor equipamiento en marcas líderes Sunshine, Baku y Yaxun en nuestros distribuidores afiliados.</p>
+        <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico CELLPARTS" class="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-102 transition duration-700">
+        <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/60 to-transparent z-10"></div>
+        <div class="relative z-20 max-w-lg">
+          <span class="text-[9px] font-bold text-brand bg-brand/10 border border-brand/20 px-2.5 py-0.5 rounded uppercase tracking-widest">Laboratorio CELLPARTS</span>
+          <h4 class="text-base font-extrabold text-white mt-1.5">¿Necesitás reparar una placa o cambiar un glass?</h4>
+          <p class="text-zinc-400 text-xs mt-0.5">Servicio técnico express para el gremio con equipamiento de alta precisión y microsoldadura.</p>
         </div>
-        <button onclick="triggerQuickCategory('Herramientas')" class="z-10 bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-xs px-4 py-2.5 rounded-lg whitespace-nowrap transition shadow-md shadow-brand/20">Ver herramientas</button>
       `;
       exploreGrid.appendChild(sponsoredCard);
     }
@@ -629,11 +637,6 @@ function renderExplore(products, pagination) {
     const sampleImage = product.image_url || PLACEHOLDER_SVG;
     
     card.innerHTML = `
-      <!-- Botón de favorito/estrella arriba a la derecha -->
-      <button class="absolute top-3.5 right-3.5 z-20 text-zinc-600 hover:text-yellow-500 transition-colors" title="Agregar a favoritos">
-        <svg class="w-4 h-4 fill-transparent hover:fill-current" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-      </button>
-
       <!-- Imagen contenedora de ancho completo cuadrada -->
       <div class="w-full aspect-square bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden flex items-center justify-center mb-3.5 relative">
         <img src="${sampleImage}" referrerpolicy="no-referrer" alt="${product.original_name}" class="max-w-[90%] max-h-[90%] object-contain" onerror="this.onerror=null; this.src='${PLACEHOLDER_SVG}';">
@@ -725,7 +728,7 @@ function checkScraperStatus() {
         } else {
           state.isScraping = false;
           if (statusDot) statusDot.className = 'status-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
-          if (statusText) statusText.textContent = 'Conectado';
+          if (statusText) statusText.textContent = 'Actualizado';
           toastNotification.classList.add('hidden');
         }
       }

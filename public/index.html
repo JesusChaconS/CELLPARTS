@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CELL-PARTS | Comparador de Repuestos e Insumos</title>
   <meta name="description" content="Compara precios y stock de repuestos de celulares en tiempo real entre los mejores distribuidores mayoristas de Argentina.">
+  <link rel="icon" type="image/x-icon" href="/image/CELLPARTS.ico">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,7 +129,7 @@
             
             <div id="serverStatusMobile" class="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Online</span>
+              <span>Actualizado</span>
             </div>
           </div>
         </div>
@@ -147,7 +148,7 @@
         <div class="hidden md:flex items-center gap-4">
           <div id="serverStatus" class="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full shadow-inner">
             <span class="status-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="status-text">Conectado</span>
+            <span class="status-text">Actualizado</span>
           </div>
           <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 cursor-pointer hover:bg-zinc-700 transition">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
@@ -156,7 +157,34 @@
       </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-8">
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-8 pb-28 md:pb-8">
+      
+      <!-- Sub-Navbar de Categorías Horizontal (Filtros Rápidos) -->
+      <div id="categorySubNavbar" class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-hidden border-b border-zinc-800/40">
+        <button onclick="triggerQuickCategory('Modulo')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>📱</span> Módulos
+        </button>
+        <button onclick="triggerQuickCategory('Bateria')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>🔋</span> Baterías
+        </button>
+        <button onclick="triggerQuickCategory('Flex')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>🔌</span> Cables Flex
+        </button>
+        <button onclick="triggerQuickCategory('Pin de Carga')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>⚡</span> Pines de Carga
+        </button>
+        <button onclick="triggerQuickCategory('Tapa')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>🛡️</span> Tapas
+        </button>
+        <button onclick="triggerQuickCategory('Herramientas')" class="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold text-zinc-300 px-4 py-2 rounded-full whitespace-nowrap transition-all shadow-sm">
+          <span>🛠️</span> Herramientas
+        </button>
+        <span class="text-zinc-800 font-light mx-1">|</span>
+        <button onclick="triggerQuickBrand('Samsung')" class="bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800/40 hover:border-zinc-700 text-xs font-semibold text-zinc-400 hover:text-zinc-200 px-3.5 py-2 rounded-full whitespace-nowrap transition-all">Samsung</button>
+        <button onclick="triggerQuickBrand('Motorola')" class="bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800/40 hover:border-zinc-700 text-xs font-semibold text-zinc-400 hover:text-zinc-200 px-3.5 py-2 rounded-full whitespace-nowrap transition-all">Motorola</button>
+        <button onclick="triggerQuickBrand('iPhone')" class="bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800/40 hover:border-zinc-700 text-xs font-semibold text-zinc-400 hover:text-zinc-200 px-3.5 py-2 rounded-full whitespace-nowrap transition-all">iPhone</button>
+        <button onclick="triggerQuickBrand('Xiaomi')" class="bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800/40 hover:border-zinc-700 text-xs font-semibold text-zinc-400 hover:text-zinc-200 px-3.5 py-2 rounded-full whitespace-nowrap transition-all">Xiaomi</button>
+      </div>
 
       <section id="homePromoSection" class="space-y-8">
 
@@ -234,17 +262,15 @@
             </div>
           </div>
 
-          <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
-            <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/20 to-transparent z-0"></div>
+          <!-- Banner Servicio Técnico (cellpartsBAN) -->
+          <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden group min-h-[180px] flex flex-col justify-end p-6">
+            <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico Cellparts" class="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-102 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10"></div>
             
-            <div class="z-10">
-              <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest">Oportunidades</span>
-              <h3 class="text-xl font-bold text-white mt-3">Mejores Rebajas Recientes</h3>
-              <p class="text-zinc-400 text-xs mt-1 max-w-md">Monitoreamos las caídas de precios de repuestos de alta rotación en las últimas 24 horas.</p>
-            </div>
-            <div class="z-10 mt-6 flex items-center justify-between">
-              <span class="text-xs text-emerald-400 font-extrabold">↓ Bajaron de Precio</span>
-              <button onclick="triggerSortBy('price-asc')" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-4 py-2 rounded-lg transition border border-zinc-700">Explorar Ofertas</button>
+            <div class="relative z-20">
+              <span class="text-[9px] font-bold text-brand bg-brand/10 px-2.5 py-1 rounded border border-brand/20 uppercase tracking-widest inline-block">Laboratorio CELLPARTS</span>
+              <h3 class="text-xl font-black text-white mt-2 leading-tight">Servicio Técnico de Alta Complejidad</h3>
+              <p class="text-zinc-300 text-xs mt-1 max-w-lg">Diagnósticos avanzados, microsoldadura, cambio de integrado de carga y reparación de placa para el gremio técnico.</p>
             </div>
           </div>
         </div>
@@ -408,17 +434,13 @@
     </footer>
 
     <nav class="mobile-nav-bar lg:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur border-t border-zinc-800 py-2.5 px-6 flex justify-around items-center z-50 shadow-2xl">
-      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavSearch">
+      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavSearch" onclick="focusSearch()">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span class="text-[9px] font-semibold">Buscar</span>
       </button>
       <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavFilters" onclick="openFiltersDrawer()">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><circle cx="4" cy="12" r="2"></circle><circle cx="12" cy="10" r="2"></circle><circle cx="20" cy="14" r="2"></circle></svg>
         <span class="text-[9px] font-semibold">Filtros</span>
-      </button>
-      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavUpdate" onclick="triggerScrapeMobile()">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-        <span class="text-[9px] font-semibold">Actualizar</span>
       </button>
     </nav>
 
