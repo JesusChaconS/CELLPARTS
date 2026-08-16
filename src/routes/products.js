@@ -126,4 +126,31 @@ router.get('/scrape-status', (req, res) => {
   });
 });
 
+/**
+ * POST /api/products/update-catalog
+ * Recibe lotes de productos desde el scraper local para guardarlos en la base de datos de Render.
+ */
+router.post('/update-catalog', async (req, res) => {
+  const { apiKey, products } = req.body;
+  const serverApiKey = process.env.API_KEY || 'cellparts-secret-key';
+  
+  if (apiKey !== serverApiKey) {
+    return res.status(401).json({ success: false, error: 'No autorizado' });
+  }
+  
+  if (!Array.isArray(products)) {
+    return res.status(400).json({ success: false, error: 'Se esperaba un array de productos' });
+  }
+  
+  try {
+    console.log(`API: Guardando lote de ${products.length} productos...`);
+    for (const p of products) {
+      await db.saveProduct(p);
+    }
+    res.json({ success: true, message: `Lote de ${products.length} productos procesado con éxito.` });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;

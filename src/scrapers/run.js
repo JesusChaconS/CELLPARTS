@@ -3,12 +3,14 @@
  * Ejecuta de forma secuencial los scrapers de todos los proveedores e inserta/actualiza los registros en la base de datos.
  */
 
-const { initDb } = require('../db/database');
+const db = require('../db/database');
+const { initDb } = db;
 const { scrapeMundoParts } = require('./mundoparts');
 const { scrapeFastCheap } = require('./fastcheap');
 const { scrapeI2CMayorista } = require('./i2cmayorista');
 const { scrapeOneService } = require('./oneservice');
 const { scrapeUniontools } = require('./uniontools');
+const axios = require('axios');
 
 async function run() {
   const startTime = Date.now();
@@ -79,12 +81,58 @@ async function run() {
     console.log(`- Tiempo total: ${duration} minutos`);
     console.log('=============================================\n');
     
+    // Sincronizar automáticamente con el servidor de producción si está configurada la URL
+    await syncWithRemote();
+    
   } catch (error) {
     console.error('Error crítico durante la orquestación del scraping:', error.message);
     process.exit(1);
   }
 }
 
+/**
+ * Envía los productos de la base de datos local al backend en Render
+ */
+async function syncWithRemote() {
+  const remoteUrl = process.env.REMOTE_API_URL;
+  const apiKey = process.env.API_KEY || 'cellparts-secret-key';
+  
+  if (!remoteUrl) {
+    console.log('Sincronización: REMOTE_API_URL no configurado. Sincronización remota omitida.');
+    return;
+  }
+  
+  console.log(`\n--- Iniciando Sincronización con Servidor Remoto: ${remoteUrl} ---`);
+  
+  try {
+    // Obtener todos los productos de la BD local
+    const products = await db.getProducts({ limit: 100000 });
+    console.log(`Sincronización: Se encontraron ${products.length} productos locales para sincronizar.`);
+    
+    // Subir en lotes de 250 productos
+    const batchSize = 250;
+    for (let i = 0; i < products.length; i += batchSize) {
+      const batch = products.slice(i, i + batchSize);
+      console.log(`Sincronización: Enviando lote ${Math.floor(i / batchSize) + 1} (${batch.length} productos)...`);
+      
+      const response = await axios.post(`${remoteUrl}/api/products/update-catalog`, {
+        apiKey,
+        products: batch
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 45000
+      });
+      
+      if (!response.data.success) {
+        console.error('Sincronización: Error en el servidor remoto:', response.data.error);
+        break;
+      }
+    }
+    console.log('--- Sincronización Remota Completada con Éxito ---\n');
+  } catch (err) {
+    console.error('Sincronización: Error crítico durante el envío:', err.message);
+  }
+}
 
 if (require.main === module) {
   run();
