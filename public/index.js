@@ -605,14 +605,7 @@ function renderExplore(products, pagination) {
   products.forEach((product, index) => {
     
     
-    if (index === 6) {
-      const sponsoredCard = document.createElement('div');
-      sponsoredCard.className = 'col-span-2 md:col-span-3 relative rounded-2xl border border-zinc-850 overflow-hidden bg-zinc-950 flex items-center justify-center p-0 min-h-[130px] max-h-[160px]';
-      sponsoredCard.innerHTML = `
-        <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico CELLPARTS" class="w-full h-full object-cover">
-      `;
-      exploreGrid.appendChild(sponsoredCard);
-    }
+
 
     const card = document.createElement('div');
     card.className = 'bg-zinc-900 border border-zinc-850 hover:border-zinc-750 rounded-2xl p-3 flex flex-col justify-between transition-all duration-300 relative product-card-zoom group shadow-md hover:shadow-lg';
