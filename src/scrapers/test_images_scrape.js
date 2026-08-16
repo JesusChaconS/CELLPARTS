@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Test de Scraper de Imágenes.
+ * Prueba aislada del funcionamiento de la extracción de imágenes.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 

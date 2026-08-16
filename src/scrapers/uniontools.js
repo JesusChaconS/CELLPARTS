@@ -1,15 +1,18 @@
+/**
+ * CELL-PARTS - Scraper de UnionTools.
+ * Indexa insumos de servicio técnico, herramientas y repuestos de UnionTools.
+ */
+
 const { exec } = require('child_process');
 const { normalizeProduct } = require('../services/normalizer');
 const { saveProduct } = require('../db/database');
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Ejecuta un comando de PowerShell de forma asíncrona y devuelve el stdout.
- */
+
 function execPowerShell(cmd) {
   return new Promise((resolve, reject) => {
-    // Aumentamos maxBuffer a 25MB para acomodar listados grandes de JSON
+    
     exec(cmd, { maxBuffer: 25 * 1024 * 1024 }, (err, stdout, stderr) => {
       if (err) return reject(err);
       resolve(stdout);
@@ -32,7 +35,7 @@ async function scrapeUniontools() {
 
     try {
       const stdout = await execPowerShell(cmd);
-      consecutiveErrors = 0; // Resetear errores
+      consecutiveErrors = 0; 
       
       if (!stdout || stdout.trim() === '') {
         console.log('Uniontools: Respuesta vacía de la API. Finalizando scraping.');
@@ -47,7 +50,7 @@ async function scrapeUniontools() {
         break;
       }
 
-      // El convertidor ConvertTo-Json de PowerShell puede envolver arrays en un objeto con propiedad "value"
+      
       let items = [];
       if (parsedData) {
         if (Array.isArray(parsedData)) {
@@ -83,21 +86,21 @@ async function scrapeUniontools() {
         const originalName = item.name;
         if (!originalName) continue;
 
-        // Parsear precio y dividir por el factor de minor unit
+        
         let rawPrice = item.prices ? parseFloat(item.prices.price) : 0;
         const minorUnit = item.prices && item.prices.currency_minor_unit !== undefined ? item.prices.currency_minor_unit : 0;
         const price = rawPrice / Math.pow(10, minorUnit);
 
-        // Obtener imagen
+        
         const imageUrl = item.images && item.images[0] ? item.images[0].src : null;
 
-        // Stock
+        
         const stock = item.is_in_stock ? 1 : 0;
 
-        // Normalizar
+        
         const normalized = normalizeProduct(originalName);
 
-        // Guardar
+        
         const product = {
           provider: 'uniontools',
           original_name: originalName,
@@ -128,7 +131,7 @@ async function scrapeUniontools() {
       }
 
       page++;
-      await delay(1500); // Dar un respiro a la red
+      await delay(1500); 
 
     } catch (error) {
       consecutiveErrors++;

@@ -1,4 +1,8 @@
-// State Management
+/**
+ * CELL-PARTS - Lógica del Cliente (Front-end).
+ * Gestiona el estado de búsqueda, filtros de marca/categoría/precio, paginación e interacción con la API.
+ */
+
 const state = {
   searchQuery: '',
   filters: {
@@ -11,7 +15,7 @@ const state = {
   sorting: 'price-asc',
   pagination: {
     page: 1,
-    limit: 21, // Múltiplo de 3 para cuadrículas estéticas de 3 columnas
+    limit: 21, 
     totalPages: 1
   },
   facets: {
@@ -26,10 +30,10 @@ const state = {
 
 const PLACEHOLDER_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiB2aWV3Qm94PSIwIDAgMjAwIDIwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMyNzI3MmEiLz48cGF0aCBkPSJNMTAwIDcwYy0xMSAwLTIwIDktMjAgMjBzOSAyMCAyMCAyMCAyMCAyMC05IDIwLTIwLTktMjAtMjAtMjB6bTAgMzBjLTUuNSAwLTEwLTQuNS0xMC0xMHM0LjUtMTAgMTAtMTAgMTAgQy41IDEwIDEwLTQuNSAxMC0xMC00LjUgMTAtMTAgMTB6bTM1LTQBoLTE1bC01LThIODVsLTUgOEg2NWMtOC4zIDAtMTUgNi43LTE1IDE1djUwYzAgOC4zIDYuNyAxNSAxNSAxNWg3MGM4LjMgMCAxNS02LjcsMTUtMTVWNzVjMC04LjMtNi43LTE1LTE1LTE1em01IDY1YzAgMi44LTIuMiA1LTUgNUg2NWMtMi44IDAtNS0yLjItNS01Vjc1YzAtMi44IDIuMi01IDUtNWgxNy44bDUtOGgyNC40bDUgOEgxMzVjMi44IDAgNSAyLjIgNSA1djUweiIgZmlsbD0iIzUyNTI1YiIvPjx0ZXh0IHg9IjUwJSIgeT0iMTUwIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEwIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjNTI1MjViIiBsZXR0ZXItc3BhY2luZz0iMSI+SU1BR0VOIE5PIERJU1BPTklCTEU8L3RleHQ+PC9zdmc+";
 
-// Debounce timer
+
 let debounceTimer;
 
-// DOM Elements
+
 const searchInput = document.getElementById('searchInput');
 const clearSearchBtn = document.getElementById('clearSearchBtn');
 const resultsCount = document.getElementById('resultsCount');
@@ -50,11 +54,11 @@ const toastNotification = document.getElementById('toastNotification');
 const homePromoSection = document.getElementById('homePromoSection');
 const searchResultSection = document.getElementById('searchResultSection');
 
-// Mobile drawer elements
+
 const filterDrawerOverlay = document.getElementById('filterDrawerOverlay');
 const filterDrawer = document.getElementById('filterDrawer');
 
-// Price filter inputs - Desktop
+
 const minPriceInput = document.getElementById('minPriceInput');
 const maxPriceInput = document.getElementById('maxPriceInput');
 const priceRangeSliderMin = document.getElementById('priceRangeSliderMin');
@@ -63,7 +67,7 @@ const sliderTrack = document.getElementById('sliderTrack');
 const sliderRange = document.getElementById('sliderRange');
 const applyPriceFilterBtn = document.getElementById('applyPriceFilterBtn');
 
-// Price filter inputs - Mobile
+
 const minPriceInputMobile = document.getElementById('minPriceInputMobile');
 const maxPriceInputMobile = document.getElementById('maxPriceInputMobile');
 const priceRangeSliderMinMobile = document.getElementById('priceRangeSliderMinMobile');
@@ -72,18 +76,18 @@ const sliderTrackMobile = document.getElementById('sliderTrackMobile');
 const sliderRangeMobile = document.getElementById('sliderRangeMobile');
 const applyPriceFilterBtnMobile = document.getElementById('applyPriceFilterBtnMobile');
 
-// Initial Setup
+
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   checkScraperStatus();
   
-  // Intervalo de liveness de 15 segundos
+  
   setInterval(checkScraperStatus, 15000);
 });
 
-// Event Listeners Binding
+
 function setupEventListeners() {
-  // Buscador Input
+  
   searchInput.addEventListener('input', (e) => {
     const val = e.target.value.trim();
     state.searchQuery = val;
@@ -97,12 +101,12 @@ function setupEventListeners() {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       state.pagination.page = 1;
-      // Al cambiar la búsqueda de texto, recalculamos las facetas
+      
       fetchFacets().then(() => fetchData());
     }, 450);
   });
 
-  // Limpiar Búsqueda
+  
   clearSearchBtn.addEventListener('click', () => {
     searchInput.value = '';
     state.searchQuery = '';
@@ -112,14 +116,14 @@ function setupEventListeners() {
     fetchFacets().then(() => fetchData());
   });
 
-  // Ordenamiento
+  
   sortBySelect.addEventListener('change', (e) => {
     state.sorting = e.target.value;
     state.pagination.page = 1;
     fetchData();
   });
 
-  // Paginación
+  
   prevPageBtn.addEventListener('click', () => {
     if (state.pagination.page > 1) {
       state.pagination.page--;
@@ -136,7 +140,7 @@ function setupEventListeners() {
     }
   });
 
-  // Event Delegation para Checkboxes Dinámicos
+  
   document.addEventListener('change', (e) => {
     if (e.target.classList.contains('filter-checkbox')) {
       const val = e.target.value;
@@ -155,7 +159,7 @@ function setupEventListeners() {
         if (idx > -1) list.splice(idx, 1);
       }
 
-      // Sincronizar estado visual entre checkboxes del cajón móvil y la barra lateral de PC
+      
       syncCheckboxStates(type, val, isChecked);
 
       state.pagination.page = 1;
@@ -163,7 +167,7 @@ function setupEventListeners() {
     }
   });
 
-  // Slider de Precios - Desktop
+  
   if (priceRangeSliderMin && priceRangeSliderMax) {
     priceRangeSliderMin.addEventListener('input', (e) => {
       const minVal = parseInt(priceRangeSliderMin.value);
@@ -193,7 +197,7 @@ function setupEventListeners() {
     });
   }
 
-  // Slider de Precios - Móvil
+  
   if (priceRangeSliderMinMobile && priceRangeSliderMaxMobile) {
     priceRangeSliderMinMobile.addEventListener('input', (e) => {
       const minVal = parseInt(priceRangeSliderMinMobile.value);
@@ -224,7 +228,7 @@ function setupEventListeners() {
     });
   }
 
-  // Sincronizar inputs manuales con sliders al salir del campo
+  
   if (minPriceInput && maxPriceInput) {
     minPriceInput.addEventListener('change', () => {
       priceRangeSliderMin.value = minPriceInput.value;
@@ -236,7 +240,7 @@ function setupEventListeners() {
     });
   }
 
-  // Teclado sugeridos rápidos
+  
   document.querySelectorAll('.suggestion-pill').forEach(pill => {
     pill.addEventListener('click', (e) => {
       const search = e.target.dataset.search;
@@ -248,19 +252,19 @@ function setupEventListeners() {
     });
   });
 
-  // Cerrar Drawer móvil al hacer clic fuera del panel
+  
   filterDrawerOverlay.addEventListener('click', (e) => {
     if (e.target === filterDrawerOverlay) closeFiltersDrawer();
   });
 
-  // Botón actualizar de escritorio
+  
   const desktopUpdateBtn = document.getElementById('desktopUpdateScrapersBtn');
   if (desktopUpdateBtn) {
     desktopUpdateBtn.addEventListener('click', triggerScrapeMobile);
   }
 }
 
-// Resetea todos los filtros locales
+
 function resetFilters() {
   state.filters.providers = [];
   state.filters.brands = [];
@@ -274,7 +278,7 @@ function resetFilters() {
   if (maxPriceInputMobile) maxPriceInputMobile.value = '';
 }
 
-// Sincroniza visualmente los checkboxes de la barra de escritorio y del drawer móvil
+
 function syncCheckboxStates(type, value, isChecked) {
   const checkboxes = document.querySelectorAll(`input[type="checkbox"][value="${value}"][data-type="${type}"]`);
   checkboxes.forEach(cb => {
@@ -290,7 +294,7 @@ function syncCheckboxStates(type, value, isChecked) {
   });
 }
 
-// Reset al inicio
+
 function resetToHome() {
   searchInput.value = '';
   state.searchQuery = '';
@@ -302,7 +306,7 @@ function resetToHome() {
   searchResultSection.classList.add('hidden');
 }
 
-// Activa una categoría específica y salta al listado
+
 function triggerQuickCategory(categoryName) {
   resetFilters();
   state.filters.categories = [categoryName];
@@ -313,7 +317,7 @@ function triggerQuickCategory(categoryName) {
   fetchFacets().then(() => fetchData());
 }
 
-// Activa una marca específica y salta al listado
+
 function triggerQuickBrand(brandName) {
   resetFilters();
   state.filters.brands = [brandName];
@@ -324,7 +328,7 @@ function triggerQuickBrand(brandName) {
   fetchFacets().then(() => fetchData());
 }
 
-// Activa un proveedor específico al hacer clic en su logotipo
+
 function triggerQuickProvider(providerName) {
   resetFilters();
   state.filters.providers = [providerName];
@@ -335,7 +339,7 @@ function triggerQuickProvider(providerName) {
   fetchFacets().then(() => fetchData());
 }
 
-// Cambiar la ordenación de forma imperativa
+
 function triggerSortBy(sortVal) {
   sortBySelect.value = sortVal;
   state.sorting = sortVal;
@@ -343,15 +347,15 @@ function triggerSortBy(sortVal) {
   fetchData();
 }
 
-// Scroll suave hasta el encabezado del listado
+
 function scrollToResults() {
   searchResultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// Controladores para el Cajón Deslizable Móvil (Slide-Up Drawer)
+
 function openFiltersDrawer() {
   filterDrawerOverlay.classList.remove('hidden');
-  // Pequeño timeout para permitir que la animación CSS se dispare
+  
   setTimeout(() => {
     filterDrawerOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -366,10 +370,10 @@ function closeFiltersDrawer() {
   }, 350);
 }
 
-// Limpiar todos los filtros activos
+
 function clearAllFilters() {
   resetFilters();
-  // Desmarcar todos los checkboxes visibles
+  
   document.querySelectorAll('.filter-checkbox').forEach(cb => {
     cb.checked = false;
     if (cb.nextElementSibling) {
@@ -377,7 +381,7 @@ function clearAllFilters() {
     }
   });
   
-  // Reiniciar sliders de precio a sus rangos originales
+  
   priceRangeSliderMin.value = state.facets.minPrice;
   priceRangeSliderMax.value = state.facets.maxPrice;
   minPriceInput.value = state.facets.minPrice;
@@ -396,7 +400,7 @@ function clearAllFilters() {
   fetchData();
 }
 
-// Actualizar barra y posición visual del slider doble
+
 function updateSliderUI(view = 'desktop') {
   if (view === 'desktop' && priceRangeSliderMin && priceRangeSliderMax) {
     const minVal = parseInt(priceRangeSliderMin.value);
@@ -417,7 +421,7 @@ function updateSliderUI(view = 'desktop') {
   }
 }
 
-// Fetch Dinámico de Facetas (Precios y recuentos de marcas/categorías)
+
 async function fetchFacets() {
   try {
     const res = await fetch(`/api/products/facets?q=${encodeURIComponent(state.searchQuery)}`);
@@ -426,17 +430,17 @@ async function fetchFacets() {
     if (payload.success && payload.data) {
       state.facets = payload.data;
       
-      // Actualizar rangos de precio en los sliders
+      
       const min = Math.floor(state.facets.minPrice || 0);
       const max = Math.ceil(state.facets.maxPrice || 1000000);
       
-      // Desktop range sliders
+      
       priceRangeSliderMin.min = min;
       priceRangeSliderMin.max = max;
       priceRangeSliderMax.min = min;
       priceRangeSliderMax.max = max;
       
-      // Si el usuario no ha puesto filtros manuales, seteamos los valores por defecto del rango absoluto
+      
       if (state.filters.minPrice === null) {
         priceRangeSliderMin.value = min;
         minPriceInput.value = min;
@@ -447,7 +451,7 @@ async function fetchFacets() {
       }
       updateSliderUI('desktop');
 
-      // Mobile range sliders
+      
       if (priceRangeSliderMinMobile) {
         priceRangeSliderMinMobile.min = min;
         priceRangeSliderMinMobile.max = max;
@@ -465,12 +469,12 @@ async function fetchFacets() {
         updateSliderUI('mobile');
       }
 
-      // Renderizar listas de checkboxes de filtros dinámicamente
+      
       renderFilterCheckboxes('brandFilterCheckboxes', state.facets.brands, 'brand', state.filters.brands);
       renderFilterCheckboxes('categoryFilterCheckboxes', state.facets.categories, 'category', state.filters.categories);
       renderFilterCheckboxes('providerFilterCheckboxes', state.facets.providers, 'provider', state.filters.providers);
       
-      // Versión móvil
+      
       renderFilterCheckboxes('brandFilterCheckboxesMobile', state.facets.brands, 'brand', state.filters.brands);
       renderFilterCheckboxes('categoryFilterCheckboxesMobile', state.facets.categories, 'category', state.filters.categories);
       renderFilterCheckboxes('providerFilterCheckboxesMobile', state.facets.providers, 'provider', state.filters.providers);
@@ -480,7 +484,7 @@ async function fetchFacets() {
   }
 }
 
-// Renderizar Checkboxes
+
 function renderFilterCheckboxes(containerId, list, type, activeList) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -520,11 +524,11 @@ function renderFilterCheckboxes(containerId, list, type, activeList) {
   }).join('');
 }
 
-// Fetch and render products data
+
 async function fetchData() {
   showLoading(true);
   
-  // Si hay alguna búsqueda o algún filtro activo, colapsamos el inicio y mostramos resultados
+  
   const hasActiveFilters = state.searchQuery.length > 0 || 
                            state.filters.providers.length > 0 || 
                            state.filters.brands.length > 0 || 
@@ -539,7 +543,7 @@ async function fetchData() {
     homePromoSection.classList.remove('hidden');
     searchResultSection.classList.add('hidden');
     showLoading(false);
-    return; // No es necesario cargar grilla vacía
+    return; 
   }
   
   try {
@@ -575,7 +579,7 @@ async function fetchData() {
   }
 }
 
-// Renderizar grilla de productos (Estilo Teclados de la imagen)
+
 function renderExplore(products, pagination) {
   exploreGrid.innerHTML = '';
   emptyState.classList.add('hidden');
@@ -583,7 +587,7 @@ function renderExplore(products, pagination) {
   const queryLabel = state.searchQuery ? `"${state.searchQuery}"` : 'los filtros seleccionados';
   resultsCount.textContent = `${pagination.total} resultados para ${queryLabel}`;
   
-  // Actualizar controles de paginación
+  
   state.pagination.totalPages = pagination.pages;
   paginationInfo.textContent = `Página ${pagination.page} de ${pagination.pages}`;
   prevPageBtn.disabled = pagination.page <= 1;
@@ -592,7 +596,7 @@ function renderExplore(products, pagination) {
   
   products.forEach((product, index) => {
     
-    // Inyectar banner patrocinado intermedio al estilo HardGamers
+    
     if (index === 6) {
       const sponsoredCard = document.createElement('div');
       sponsoredCard.className = 'col-span-2 md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4 overflow-hidden relative shadow-md';
@@ -621,7 +625,7 @@ function renderExplore(products, pagination) {
     };
     const providerLabel = providerMap[product.provider] || product.provider;
     
-    // Si no tiene imagen o falla, se inyecta el marcador gris con comillas correctas
+    
     const sampleImage = product.image_url || PLACEHOLDER_SVG;
     
     card.innerHTML = `
@@ -678,7 +682,7 @@ function renderExplore(products, pagination) {
   });
 }
 
-// Render Empty/Error State
+
 function renderEmpty(errorMessage) {
   resultsCount.textContent = 'Sin resultados';
   exploreGrid.innerHTML = '';
@@ -694,7 +698,7 @@ function renderEmpty(errorMessage) {
   emptyState.classList.remove('hidden');
 }
 
-// Loading display toggle
+
 function showLoading(show) {
   if (show) {
     loadingState.classList.remove('hidden');
@@ -707,7 +711,7 @@ function showLoading(show) {
   }
 }
 
-// Check Background Scrapers status
+
 function checkScraperStatus() {
   fetch('/api/products/scrape-status')
     .then(res => res.json())
@@ -733,7 +737,7 @@ function checkScraperStatus() {
     });
 }
 
-// Trigger Scrape from frontend
+
 function triggerScrapeMobile() {
   if (state.isScraping) return;
   
@@ -748,7 +752,7 @@ function triggerScrapeMobile() {
   }
 }
 
-// Show toast notification helper
+
 function showToast(message) {
   const toast = document.getElementById('toastNotification');
   if (toast) {

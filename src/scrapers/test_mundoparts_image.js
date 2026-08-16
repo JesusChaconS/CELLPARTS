@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Test de Imágenes de Mundo Parts.
+ * Prueba aislada del scraper de imágenes enfocado en selectores de Mundo Parts.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 

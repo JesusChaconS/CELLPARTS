@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CELL-PARTS | Comparador de Repuestos e Insumos</title>
   <meta name="description" content="Compara precios y stock de repuestos de celulares en tiempo real entre los mejores distribuidores mayoristas de Argentina.">
-  
-  <!-- Google Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS CDN -->
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -104,14 +102,12 @@
   </style>
 </head>
 <body class="h-full font-sans antialiased text-zinc-200">
-  <!-- App Wrapper -->
+  
   <div class="min-h-screen flex flex-col justify-between">
-    
-    <!-- Top Header (Estilo HardGamers) -->
+
     <header class="bg-zinc-950 border-b border-zinc-800 sticky top-0 z-50 px-4 py-3 shadow-lg">
       <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-4 justify-between">
-        
-        <!-- Logo y Navegación izquierda -->
+
         <div class="flex items-center justify-between w-full md:w-auto gap-8">
           <div class="flex items-center gap-2 cursor-pointer" onclick="resetToHome()">
             <span class="text-2xl">⚡</span>
@@ -119,8 +115,7 @@
               CELL<span class="text-brand">PARTS</span>
             </span>
           </div>
-          
-          <!-- Menú en computadoras -->
+
           <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold text-zinc-400">
             <button onclick="triggerQuickCategory('Modulo')" class="hover:text-brand transition">Categorías</button>
             <button onclick="triggerQuickBrand('Samsung')" class="hover:text-brand transition">Marcas</button>
@@ -130,7 +125,7 @@
           </nav>
 
           <div class="flex items-center gap-2 md:hidden">
-            <!-- Servidor status móvil -->
+            
             <div id="serverStatusMobile" class="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <span>Online</span>
@@ -138,7 +133,6 @@
           </div>
         </div>
 
-        <!-- Buscador Central Redondeado (Estilo HardGamers Lupa) -->
         <div class="relative w-full max-w-lg">
           <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -150,7 +144,6 @@
           </button>
         </div>
 
-        <!-- Acciones Derecha -->
         <div class="hidden md:flex items-center gap-4">
           <div id="serverStatus" class="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full shadow-inner">
             <span class="status-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -163,19 +156,15 @@
       </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-8">
-      
-      <!-- PORTADA DE INICIO (Estilo HardGamers Home Banners) -->
+
       <section id="homePromoSection" class="space-y-8">
-        
-        <!-- Grilla de Paneles Especiales -->
+
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          
-          <!-- Banner Principal (2 columnas de ancho) -->
+
           <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[220px] md:min-h-[280px]">
             <div class="absolute inset-0 bg-gradient-to-r from-sky-950/40 via-transparent to-transparent opacity-80 z-0"></div>
-            <!-- Círculo brillante de fondo -->
+            
             <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-brand/10 blur-3xl group-hover:bg-brand/20 transition-all duration-700"></div>
             
             <div class="z-10">
@@ -193,7 +182,6 @@
             </div>
           </div>
 
-          <!-- Card 2: Outlet -->
           <div class="relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
             <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent z-0"></div>
             <div class="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-yellow-500/5 blur-2xl group-hover:bg-yellow-500/10 transition-all duration-500"></div>
@@ -210,7 +198,6 @@
             </div>
           </div>
 
-          <!-- Card 3: Vertical/Banner Setup AULA -->
           <div class="md:row-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[260px] md:min-h-full">
             <div class="absolute inset-0 bg-gradient-to-b from-purpleDark/20 to-zinc-950 z-0"></div>
             <div class="absolute -top-12 -left-12 w-28 h-28 rounded-full bg-brand/10 blur-3xl group-hover:bg-brand/20 transition-all"></div>
@@ -232,7 +219,6 @@
             </div>
           </div>
 
-          <!-- Card 4: Accesorios -->
           <div class="relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
             <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent z-0"></div>
             
@@ -248,7 +234,6 @@
             </div>
           </div>
 
-          <!-- Card 5: Bajaron de Precio -->
           <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
             <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/20 to-transparent z-0"></div>
             
@@ -264,7 +249,6 @@
           </div>
         </div>
 
-        <!-- Marcas / Proveedores Banner Row (Logotipos) -->
         <div class="bg-zinc-950/50 border border-zinc-800/80 rounded-2xl py-6 px-8">
           <h4 class="text-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Distribuidores Indexados en Tiempo Real</h4>
           <div class="flex flex-wrap items-center justify-center gap-6 md:gap-12 opacity-75 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500" id="distributorLogosBar">
@@ -276,7 +260,6 @@
           </div>
         </div>
 
-        <!-- Categorías Populares (Estilo HardGamers Categorías Púrpura) -->
         <div>
           <div class="bg-purpleDark border border-purple-900/50 rounded-2xl p-6 shadow-inner flex flex-col md:flex-row md:items-center justify-between gap-6" id="popularCategoriesBar">
             <div>
@@ -309,10 +292,8 @@
 
       </section>
 
-      <!-- SECCION DE RESULTADOS CON FILTROS AVANZADOS (Estilo Grilla de Teclados) -->
       <section id="searchResultSection" class="hidden">
-        
-        <!-- Encabezado de la Búsqueda y Ordenamiento -->
+
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-4 mb-6 gap-4">
           <div>
             <h2 class="text-zinc-400 text-sm font-medium" id="resultsCount">Cargando catálogo...</h2>
@@ -329,8 +310,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-          
-          <!-- FILTROS SIDEBAR (Izquierda - Escritorio) -->
+
           <aside class="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sticky top-24 space-y-6">
             
             <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
@@ -338,11 +318,9 @@
               <button onclick="clearAllFilters()" class="text-zinc-500 hover:text-brand text-xs font-semibold transition">Limpiar todo</button>
             </div>
 
-            <!-- Filtro: Rango de Precio -->
             <div class="space-y-3">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Precio</h4>
-              
-              <!-- Inputs de Texto Mín/Máx -->
+
               <div class="flex gap-2">
                 <div class="bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 flex items-center w-1/2">
                   <span class="text-zinc-600 text-xs mr-1">$</span>
@@ -353,8 +331,7 @@
                   <input type="number" id="maxPriceInput" class="bg-transparent text-xs text-white w-full outline-none" placeholder="Max">
                 </div>
               </div>
-              
-              <!-- Slider doble de precios -->
+
               <div class="pt-2 px-1">
                 <div class="slider-container">
                   <div class="slider-track" id="sliderTrack"></div>
@@ -369,53 +346,45 @@
               </button>
             </div>
 
-            <!-- Filtro: Distribuidores (Checkboxes) -->
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
               <div class="space-y-1.5" id="providerFilterCheckboxes">
-                <!-- Inyectados dinámicamente con checkbox y contadores -->
+                
               </div>
             </div>
 
-            <!-- Filtro: Marcas (Checkboxes) -->
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
               <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="brandFilterCheckboxes">
-                <!-- Inyectados dinámicamente -->
+                
               </div>
             </div>
 
-            <!-- Filtro: Categorías (Checkboxes) -->
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
               <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="categoryFilterCheckboxes">
-                <!-- Inyectados dinámicamente -->
+                
               </div>
             </div>
           </aside>
 
-          <!-- GRID DE RESULTADOS (Derecha - Grilla estilo Teclados) -->
           <div class="lg:col-span-3 space-y-6">
-            
-            <!-- Loading State -->
+
             <div class="loading-state hidden py-16 flex flex-col items-center justify-center bg-zinc-900/50 border border-zinc-800 rounded-2xl" id="loadingState">
               <div class="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
               <p class="text-zinc-400 text-sm mt-4 font-semibold">Buscando las mejores ofertas...</p>
             </div>
 
-            <!-- Empty/Zero Results State -->
             <div class="empty-state hidden py-16 flex flex-col items-center justify-center bg-zinc-900/50 border border-zinc-800 rounded-2xl text-center" id="emptyState">
               <div class="text-4xl">🔍</div>
               <h3 class="empty-title text-lg font-bold text-white mt-4">Sin resultados</h3>
               <p class="empty-description text-zinc-400 text-xs mt-1 max-w-sm">No encontramos repuestos que coincidan con los filtros seleccionados. Intenta otra búsqueda.</p>
             </div>
 
-            <!-- Grid de productos -->
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="exploreGrid">
-              <!-- Las tarjetas se inyectan aquí dinámicamente -->
+              
             </div>
 
-            <!-- Paginación -->
             <div class="pagination-container hidden flex items-center justify-center gap-4 bg-zinc-900 border border-zinc-800 p-4 rounded-2xl" id="paginationContainer">
               <button class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold px-4 py-2.5 rounded-lg border border-zinc-700 transition" id="prevPageBtn" disabled>Anterior</button>
               <span class="pagination-info text-xs font-semibold text-zinc-400" id="paginationInfo">Página 1 de 1</span>
@@ -427,7 +396,6 @@
 
     </main>
 
-    <!-- Footer de CELL-PARTS -->
     <footer class="bg-zinc-950 border-t border-zinc-800 py-6 px-4 text-center mt-12 hidden lg:block">
       <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
         <span>&copy; 2026 CELL-PARTS. Comparador mayorista para gremio técnico y reparación.</span>
@@ -439,7 +407,6 @@
       </div>
     </footer>
 
-    <!-- Barra de Navegación Móvil (Táctil) -->
     <nav class="mobile-nav-bar lg:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur border-t border-zinc-800 py-2.5 px-6 flex justify-around items-center z-50 shadow-2xl">
       <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavSearch">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -455,7 +422,6 @@
       </button>
     </nav>
 
-    <!-- Cajón Deslizable de Filtros Móvil (Slide-Up Drawer) -->
     <div class="mobile-drawer-overlay fixed inset-0 bg-black/60 z-[100] transition-opacity duration-300 ease-out hidden" id="filterDrawerOverlay">
       <div class="mobile-drawer fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 rounded-t-3xl max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl transition-transform duration-300 ease-out translate-y-full" id="filterDrawer">
         
@@ -467,7 +433,6 @@
           </div>
         </div>
 
-        <!-- Móvil: Rango de precio -->
         <div class="space-y-3">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Rango de Precio</h4>
           <div class="flex gap-2">
@@ -495,40 +460,35 @@
           </button>
         </div>
 
-        <!-- Móvil: Distribuidores (Checkboxes) -->
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
           <div class="space-y-1.5" id="providerFilterCheckboxesMobile">
-            <!-- Inyectados dinámicamente -->
+            
           </div>
         </div>
 
-        <!-- Móvil: Marcas (Checkboxes) -->
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
           <div class="space-y-1.5 max-h-40 overflow-y-auto" id="brandFilterCheckboxesMobile">
-            <!-- Inyectados dinámicamente -->
+            
           </div>
         </div>
 
-        <!-- Móvil: Categorías (Checkboxes) -->
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
           <div class="space-y-1.5 max-h-40 overflow-y-auto" id="categoryFilterCheckboxesMobile">
-            <!-- Inyectados dinámicamente -->
+            
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Toast/Notification -->
+
     <div class="toast-notification hidden fixed top-5 right-5 z-[200] bg-zinc-900 border border-zinc-800 text-xs text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-bounce" id="toastNotification">
       <span class="toast-icon">🔄</span>
       <span class="toast-text">Actualizando base de datos...</span>
     </div>
   </div>
 
-  <!-- JS Logic -->
   <script src="index.js"></script>
 </body>
 </html>

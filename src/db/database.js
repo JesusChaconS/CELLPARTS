@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Conexión y Gestión de Base de Datos SQLite.
+ * Inicializa las tablas, crea índices e implementa las funciones de consulta, búsqueda y guardado de productos.
+ */
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
@@ -11,11 +16,9 @@ if (!fs.existsSync(parentDir)) {
 }
 
 const db = new sqlite3.Database(dbPath);
-db.configure("busyTimeout", 15000); // Esperar hasta 15 segundos si la base de datos está ocupada
+db.configure("busyTimeout", 15000); 
 
-/**
- * Aplica lógica de búsqueda inteligente con soporte de abreviaciones y búsqueda multi-columna.
- */
+
 function applySearchQuery(sql, params, q) {
   if (!q) return sql;
   
@@ -26,7 +29,7 @@ function applySearchQuery(sql, params, q) {
     modifiedSql += ' AND (clean_name LIKE ? OR brand LIKE ? OR model LIKE ? OR category LIKE ?';
     params.push(`%${word}%`, `%${word}%`, `%${word}%`, `%${word}%`);
     
-    // Mapeo de sinónimos y abreviaturas
+    
     if (word === 'samsung' || word === 'sam') {
       modifiedSql += ' OR brand = "Samsung" OR clean_name LIKE "%sam%"';
     } else if (word === 'motorola' || word === 'moto') {
@@ -43,13 +46,11 @@ function applySearchQuery(sql, params, q) {
   return modifiedSql;
 }
 
-/**
- * Inicializa la base de datos creando la tabla y los índices.
- */
+
 function initDb() {
   return new Promise((resolve, reject) => {
     db.serialize(() => {
-      // Crear tabla de productos
+      
       db.run(`
         CREATE TABLE IF NOT EXISTS products (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,7 +71,7 @@ function initDb() {
         if (err) return reject(err);
       });
 
-      // Crear índices para optimizar búsquedas y filtros
+      
       const indices = [
         'CREATE INDEX IF NOT EXISTS idx_products_clean_name ON products(clean_name)',
         'CREATE INDEX IF NOT EXISTS idx_products_brand ON products(brand)',
@@ -95,9 +96,7 @@ function initDb() {
   });
 }
 
-/**
- * Inserta o actualiza un producto si ya existe por su URL única.
- */
+
 function saveProduct(product) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -138,9 +137,7 @@ function saveProduct(product) {
   });
 }
 
-/**
- * Helper para agregar filtros de selección múltiple (separados por comas) usando IN
- */
+
 function appendMultiSelectFilter(sql, params, field, valueString) {
   if (!valueString) return sql;
   const values = valueString.split(',').map(v => v.trim()).filter(Boolean);
@@ -155,9 +152,7 @@ function getMultiSelectParams(valueString) {
   return valueString.split(',').map(v => v.trim()).filter(Boolean);
 }
 
-/**
- * Obtiene los productos con filtros y paginación.
- */
+
 function getProducts(options = {}) {
   return new Promise((resolve, reject) => {
     const { provider, brand, model, category, minPrice, maxPrice, q, limit = 50, offset = 0, sortBy = 'price', order = 'ASC' } = options;
@@ -165,7 +160,7 @@ function getProducts(options = {}) {
     let sql = 'SELECT * FROM products WHERE (stock IS NULL OR stock > 0) AND price > 0';
     const params = [];
 
-    // Filtros de selección única o múltiple
+    
     if (provider) {
       sql = appendMultiSelectFilter(sql, params, 'provider', provider);
       params.push(...getMultiSelectParams(provider));
@@ -194,7 +189,7 @@ function getProducts(options = {}) {
       sql = applySearchQuery(sql, params, q);
     }
 
-    // Ordenar y paginar
+    
     const allowedSort = ['price', 'scraped_at', 'brand', 'model'];
     const sortField = allowedSort.includes(sortBy) ? sortBy : 'price';
     const sortOrder = order.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
@@ -209,9 +204,7 @@ function getProducts(options = {}) {
   });
 }
 
-/**
- * Cuenta la cantidad de productos que coinciden con los filtros (para paginación).
- */
+
 function countProducts(options = {}) {
   return new Promise((resolve, reject) => {
     const { provider, brand, model, category, minPrice, maxPrice, q } = options;
@@ -254,10 +247,7 @@ function countProducts(options = {}) {
   });
 }
 
-/**
- * Obtiene las facetas de los productos (rango de precios, marcas y categorías agrupadas con conteo)
- * basadas únicamente en la búsqueda de texto actual 'q'.
- */
+
 function getProductFacets(options = {}) {
   return new Promise((resolve, reject) => {
     const { q } = options;
@@ -307,9 +297,7 @@ function getProductFacets(options = {}) {
   });
 }
 
-/**
- * Busca repuestos y los agrupa/ordena para comparar fácilmente entre proveedores.
- */
+
 function searchAndCompare(query) {
   return new Promise((resolve, reject) => {
     if (!query) return resolve([]);

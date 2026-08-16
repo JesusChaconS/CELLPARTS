@@ -1,15 +1,17 @@
+/**
+ * CELL-PARTS - Rutas de la API de Productos.
+ * Define los endpoints para buscar, filtrar, comparar repuestos y disparar la actualización de scrapers.
+ */
+
 const express = require('express');
 const router = express.Router();
 const db = require('../db/database');
 const { run: runScrapers } = require('../scrapers/run');
 
-// Variable global para trackear si hay un scraper corriendo
+
 let isScraping = false;
 
-/**
- * GET /api/products
- * Obtiene lista de productos con paginación y filtros.
- */
+
 router.get('/', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 20;
@@ -48,10 +50,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-/**
- * GET /api/products/facets
- * Obtiene rangos de precio, marcas, categorías y distribuidores agrupados para filtros basados en la búsqueda.
- */
+
 router.get('/facets', async (req, res) => {
   try {
     const q = req.query.q;
@@ -65,10 +64,7 @@ router.get('/facets', async (req, res) => {
   }
 });
 
-/**
- * GET /api/products/compare
- * Busca un producto específico y lo devuelve ordenado para fácil comparación.
- */
+
 router.get('/compare', async (req, res) => {
   const query = req.query.q;
   if (!query) {
@@ -78,7 +74,7 @@ router.get('/compare', async (req, res) => {
   try {
     const products = await db.searchAndCompare(query);
     
-    // Podemos agruparlos por proveedor para comodidad del frontend
+    
     const comparison = {
       query,
       total: products.length,
@@ -95,10 +91,7 @@ router.get('/compare', async (req, res) => {
   }
 });
 
-/**
- * POST /api/products/scrape
- * Lanza el proceso de scraping en segundo plano.
- */
+
 router.post('/scrape', (req, res) => {
   if (isScraping) {
     return res.status(409).json({ success: false, message: 'El proceso de scraping ya está ejecutándose en segundo plano.' });
@@ -107,7 +100,7 @@ router.post('/scrape', (req, res) => {
   isScraping = true;
   console.log('API: Solicitud de scraping iniciada en segundo plano.');
 
-  // Ejecución asíncrona sin bloquear la respuesta de la API
+  
   runScrapers()
     .then(() => {
       console.log('API: Proceso de scraping en segundo plano finalizado.');
@@ -125,10 +118,7 @@ router.post('/scrape', (req, res) => {
   });
 });
 
-/**
- * GET /api/products/scrape-status
- * Obtiene el estado del proceso de scraping.
- */
+
 router.get('/scrape-status', (req, res) => {
   res.json({
     success: true,

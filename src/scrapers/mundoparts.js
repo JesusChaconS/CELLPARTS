@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Scraper de Mundo Parts.
+ * Extrae la lista de repuestos y sus precios actualizados desde Mundo Parts.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { normalizeProduct } = require('../services/normalizer');
@@ -5,9 +10,7 @@ const { saveProduct } = require('../db/database');
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Parsea el precio de forma robusta soportando comas y puntos.
- */
+
 function parsePrice(priceText) {
   if (!priceText) return 0;
   let cleaned = priceText.replace(/[^\d.,]/g, '');
@@ -48,7 +51,7 @@ async function scrapeMundoParts() {
         timeout: 15000
       });
       
-      consecutiveErrors = 0; // Resetear contador de errores
+      consecutiveErrors = 0; 
       const $ = cheerio.load(response.data);
       
       const itemElements = $('.js-item-product');
@@ -64,34 +67,34 @@ async function scrapeMundoParts() {
       for (let i = 0; i < itemElements.length; i++) {
         const el = itemElements[i];
         
-        // Extraer URL desde el link del producto (product-item-link)
+        
         const linkEl = $(el).find('a.product-item-link, a.js-item-name');
         let productUrl = linkEl.attr('href');
         if (!productUrl) continue;
         
-        // Asegurar URL absoluta
+        
         if (productUrl.startsWith('//')) {
           productUrl = 'https:' + productUrl;
         } else if (productUrl.startsWith('/')) {
           productUrl = 'https://www.mundopartsrepuestos.com' + productUrl;
         }
 
-        // Si ya procesamos esta URL en esta ejecución, la omitimos
+        
         if (seenUrls.has(productUrl)) {
           continue;
         }
         seenUrls.add(productUrl);
         newProductsOnPage++;
 
-        // Extraer nombre original desde la clase js-item-name o product-item-name
+        
         const originalName = $(el).find('.js-item-name, .product-item-name').first().text().trim();
         if (!originalName) continue;
 
-        // Extraer precio
+        
         const priceEl = $(el).find('.js-price-display, .product-item-price').first();
         const price = parsePrice(priceEl.text());
 
-        // Extraer imagen
+        
         const imgEl = $(el).find('.js-product-item-image-private, .product-item-image, .js-item-image, .item-image-img').first();
         let imageUrl = null;
         if (imgEl.length > 0) {
@@ -111,7 +114,7 @@ async function scrapeMundoParts() {
           imageUrl = 'https:' + imageUrl;
         }
 
-        // Stock (Mundo Parts - Comprobación de visibilidad de etiquetas inmune a espaciado)
+        
         let stock = 1;
         const stockLabel = $(el).find('.js-stock-label, .stock-label, .out-of-stock');
         if (stockLabel.length > 0) {
@@ -122,10 +125,10 @@ async function scrapeMundoParts() {
           }
         }
 
-        // Normalizar
+        
         const normalized = normalizeProduct(originalName);
 
-        // Armar objeto producto
+        
         const product = {
           provider: 'mundoparts',
           original_name: originalName,
@@ -148,7 +151,7 @@ async function scrapeMundoParts() {
         }
       }
 
-      // Si no hubo ningún producto nuevo en toda la página, probablemente llegamos al final
+      
       if (newProductsOnPage === 0) {
         console.log('Mundo Parts: Todos los productos de esta página ya fueron procesados. Finalizando.');
         break;
@@ -156,7 +159,7 @@ async function scrapeMundoParts() {
 
       console.log(`Mundo Parts: Procesados ${newProductsOnPage} productos de la página ${page}.`);
       
-      // Pasar a la siguiente página con un delay de cortesía
+      
       page++;
       await delay(1500);
 

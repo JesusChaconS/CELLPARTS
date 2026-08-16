@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Orquestador de Scrapers.
+ * Ejecuta de forma secuencial los scrapers de todos los proveedores e inserta/actualiza los registros en la base de datos.
+ */
+
 const { initDb } = require('../db/database');
 const { scrapeMundoParts } = require('./mundoparts');
 const { scrapeFastCheap } = require('./fastcheap');
@@ -10,10 +15,10 @@ async function run() {
   console.log('=== INICIANDO PROCESO GENERAL DE SCRAPING ===');
   
   try {
-    // 1. Inicializar base de datos
+    
     await initDb();
     
-    // Obtener argumentos de consola para filtrar scraper si se desea
+    
     const args = process.argv.slice(2);
     const targetScraper = args.find(arg => arg.startsWith('--only='))?.split('=')[1];
     
@@ -80,7 +85,7 @@ async function run() {
   }
 }
 
-// Ejecutar si se llama directamente
+
 if (require.main === module) {
   run();
 }

@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Utilidad de Limpieza de Imágenes.
+ * Detecta y lista registros con imágenes no funcionales en la base de datos.
+ */
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 

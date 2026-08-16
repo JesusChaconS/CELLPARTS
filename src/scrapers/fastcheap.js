@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Scraper de Fast Cheap.
+ * Extrae repuestos, precios y stock del catálogo del distribuidor Fast Cheap.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { normalizeProduct } = require('../services/normalizer');
@@ -5,25 +10,23 @@ const { saveProduct } = require('../db/database');
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Parsea el texto del precio de forma robusta, soportando formatos en inglés y español.
- */
+
 function parsePrice(priceText) {
   if (!priceText) return 0;
-  // Limpiar espacios y caracteres no numéricos excepto punto y coma
+  
   let cleaned = priceText.replace(/[^\d.,]/g, '');
   
   const lastComma = cleaned.lastIndexOf(',');
   const lastDot = cleaned.lastIndexOf('.');
   
   if (lastComma > lastDot) {
-    // Formato español: 16.300,00 -> eliminar puntos y cambiar coma a punto
+    
     cleaned = cleaned.replace(/\./g, '').replace(/,/g, '.');
   } else if (lastDot > lastComma) {
-    // Formato inglés: 16,300.00 -> eliminar comas
+    
     cleaned = cleaned.replace(/,/g, '');
   } else {
-    // Solo un separador o ninguno
+    
     cleaned = cleaned.replace(/,/g, '.');
   }
   
@@ -52,11 +55,11 @@ async function scrapeFastCheap() {
         timeout: 15000
       });
       
-      consecutiveErrors = 0; // Resetear errores
+      consecutiveErrors = 0; 
       const $ = cheerio.load(response.data);
       
-      // En WooCommerce los productos suelen ser li.product, pero a veces div.product-wrapper
-      // Buscaremos el contenedor que encierra a cada producto individual
+      
+      
       const productElements = $('.product-wrapper, li.product');
       console.log(`Fast Cheap: Se encontraron ${productElements.length} productos en la página ${page}.`);
       
@@ -70,7 +73,7 @@ async function scrapeFastCheap() {
       for (let i = 0; i < productElements.length; i++) {
         const el = productElements[i];
         
-        // Evitar procesar elementos duplicados (a veces .product-wrapper y li.product coinciden en la misma estructura)
+        
         const linkEl = $(el).find('h3.product-title a, .woocommerce-LoopProduct-link');
         let productUrl = linkEl.attr('href');
         if (!productUrl) continue;
@@ -81,30 +84,30 @@ async function scrapeFastCheap() {
         seenUrls.add(productUrl);
         newProductsOnPage++;
 
-        // Extraer nombre original
+        
         const originalName = linkEl.text().trim();
         if (!originalName) continue;
 
-        // Extraer precio (si está de oferta, WooCommerce usa ins)
+        
         const priceEl = $(el).find('.price ins .woocommerce-Price-amount, .price .woocommerce-Price-amount').last();
         const price = parsePrice(priceEl.text());
 
-        // Extraer imagen
+        
         const imgEl = $(el).find('.product-image img.front-image, .product-image img, img.attachment-woocommerce_thumbnail').first();
         const imageUrl = imgEl.attr('src') || imgEl.attr('data-src');
 
-        // Determinar stock
-        // WooCommerce suele usar clases como 'out-of-stock' o el botón no dice 'Añadir al carrito' sino 'Leer más' o 'Seleccionar opciones'
+        
+        
         const isOutOfStock = $(el).hasClass('out-of-stock') || 
                             $(el).find('.out-of-stock').length > 0 ||
                             $(el).text().toLowerCase().includes('agotado') ||
                             $(el).text().toLowerCase().includes('sin stock');
         const stock = isOutOfStock ? 0 : 1;
 
-        // Normalizar
+        
         const normalized = normalizeProduct(originalName);
 
-        // Crear producto
+        
         const product = {
           provider: 'fastcheap',
           original_name: originalName,
@@ -135,10 +138,10 @@ async function scrapeFastCheap() {
       console.log(`Fast Cheap: Procesados ${newProductsOnPage} productos nuevos de la página ${page}.`);
       
       page++;
-      await delay(1500); // Retraso de cortesía para no saturar
+      await delay(1500); 
 
     } catch (error) {
-      // Si recibimos un 404 en WooCommerce al avanzar de página, significa que llegamos al final
+      
       if (error.response && error.response.status === 404) {
         console.log(`Fast Cheap: Página ${page} devolvió 404 (Fin de la tienda). Finalizando scraping.`);
         break;

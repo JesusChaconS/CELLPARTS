@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Diagnóstico de Imágenes.
+ * Verifica la disponibilidad y validez de las URLs de las imágenes guardadas en el catálogo.
+ */
+
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 

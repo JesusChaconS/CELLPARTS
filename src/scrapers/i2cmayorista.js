@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Scraper de i2C Mayorista.
+ * Obtiene e indexa los repuestos de celulares disponibles en i2C Mayorista.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { normalizeProduct } = require('../services/normalizer');
@@ -5,9 +10,7 @@ const { saveProduct } = require('../db/database');
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Parsea el precio de forma robusta soportando comas y puntos.
- */
+
 function parsePrice(priceText) {
   if (!priceText) return 0;
   let cleaned = priceText.replace(/[^\d.,]/g, '');
@@ -48,7 +51,7 @@ async function scrapeI2CMayorista() {
         timeout: 15000
       });
       
-      consecutiveErrors = 0; // Resetear contador de errores
+      consecutiveErrors = 0; 
       const $ = cheerio.load(response.data);
       
       const itemElements = $('.js-item-product');
@@ -64,12 +67,12 @@ async function scrapeI2CMayorista() {
       for (let i = 0; i < itemElements.length; i++) {
         const el = itemElements[i];
         
-        // Extraer URL
+        
         const linkEl = $(el).find('a.item-link, a.product-item-link, a.js-item-name').first();
         let productUrl = linkEl.attr('href');
         if (!productUrl) continue;
         
-        // Asegurar URL absoluta
+        
         if (productUrl.startsWith('//')) {
           productUrl = 'https:' + productUrl;
         } else if (productUrl.startsWith('/')) {
@@ -82,15 +85,15 @@ async function scrapeI2CMayorista() {
         seenUrls.add(productUrl);
         newProductsOnPage++;
 
-        // Extraer nombre original
+        
         const originalName = $(el).find('.item-name, .js-item-name, .product-item-name').first().text().trim();
         if (!originalName) continue;
 
-        // Extraer precio
+        
         const priceEl = $(el).find('.item-price, .js-price-display, .product-item-price').first();
         const price = parsePrice(priceEl.text());
 
-        // Extraer imagen
+        
         const imgEl = $(el).find('.js-product-item-image-private, .product-item-image, .js-item-image, .item-image-img').first();
         let imageUrl = null;
         if (imgEl.length > 0) {
@@ -110,7 +113,7 @@ async function scrapeI2CMayorista() {
           imageUrl = 'https:' + imageUrl;
         }
 
-        // Stock (Tiendanube JSON o visibilidad de etiquetas)
+        
         let stock = 1;
         const variantsContainer = $(el).find('[data-variants]');
         const variantsStr = variantsContainer.attr('data-variants');
@@ -121,7 +124,7 @@ async function scrapeI2CMayorista() {
             const totalStock = variants.reduce((sum, v) => sum + (v.stock || 0), 0);
             stock = totalStock > 0 ? totalStock : 0;
           } catch (e) {
-            // Fallback
+            
             const stockLabel = $(el).find('.js-stock-label, .stock-label, .out-of-stock');
             if (stockLabel.length > 0) {
               const style = stockLabel.attr('style') || '';
@@ -142,10 +145,10 @@ async function scrapeI2CMayorista() {
           }
         }
 
-        // Normalizar
+        
         const normalized = normalizeProduct(originalName);
 
-        // Guardar
+        
         const product = {
           provider: 'i2c',
           original_name: originalName,
@@ -176,7 +179,7 @@ async function scrapeI2CMayorista() {
       }
 
       page++;
-      await delay(1000); // Respeto al servidor
+      await delay(1000); 
 
     } catch (error) {
       consecutiveErrors++;

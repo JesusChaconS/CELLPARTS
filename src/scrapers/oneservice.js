@@ -1,3 +1,8 @@
+/**
+ * CELL-PARTS - Scraper de OneService.
+ * Scrapea el catálogo de módulos, repuestos y accesorios de OneService.
+ */
+
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { normalizeProduct } = require('../services/normalizer');
@@ -5,9 +10,7 @@ const { saveProduct } = require('../db/database');
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-/**
- * Parsea el precio de forma robusta.
- */
+
 function parsePrice(priceText) {
   if (!priceText) return 0;
   let cleaned = priceText.replace(/[^\d.,]/g, '');
@@ -48,7 +51,7 @@ async function scrapeOneService() {
         timeout: 15000
       });
       
-      consecutiveErrors = 0; // Resetear contador de errores
+      consecutiveErrors = 0; 
       const $ = cheerio.load(response.data);
       
       const productElements = $('.product-grid-item, .product-wrapper, li.product, .product');
@@ -64,7 +67,7 @@ async function scrapeOneService() {
       for (let i = 0; i < productElements.length; i++) {
         const el = productElements[i];
         
-        // Extraer URL
+        
         const linkEl = $(el).find('a.product-image-link, .woocommerce-LoopProduct-link, h3.wd-entities-title a, h3.product-title a').first();
         let productUrl = linkEl.attr('href');
         if (!productUrl) continue;
@@ -75,18 +78,18 @@ async function scrapeOneService() {
         seenUrls.add(productUrl);
         newProductsOnPage++;
 
-        // Extraer nombre original
+        
         let originalName = linkEl.text().trim();
         if (!originalName) {
           originalName = $(el).find('.wd-entities-title, .product-title, .woocommerce-loop-product__title').first().text().trim();
         }
         if (!originalName) continue;
 
-        // Extraer precio
+        
         const priceEl = $(el).find('.price ins .woocommerce-Price-amount, .price .woocommerce-Price-amount, .woocommerce-Price-amount').last();
         const price = parsePrice(priceEl.text());
 
-        // Extraer imagen (Woodmart y WooCommerce estándares)
+        
         const imgEl = $(el).find('img.wp-post-image, img.front-image, .product-image img, img').first();
         let imageUrl = null;
         if (imgEl.length > 0) {
@@ -96,17 +99,17 @@ async function scrapeOneService() {
           }
         }
 
-        // Stock
+        
         const isOutOfStock = $(el).hasClass('out-of-stock') || 
                             $(el).find('.out-of-stock').length > 0 ||
                             $(el).text().toLowerCase().includes('agotado') ||
                             $(el).text().toLowerCase().includes('sin stock');
         const stock = isOutOfStock ? 0 : 1;
 
-        // Normalizar
+        
         const normalized = normalizeProduct(originalName);
 
-        // Guardar
+        
         const product = {
           provider: 'oneservice',
           original_name: originalName,
@@ -137,13 +140,13 @@ async function scrapeOneService() {
       }
 
       page++;
-      await delay(1000); // Respeto al servidor
+      await delay(1000); 
 
     } catch (error) {
       consecutiveErrors++;
       console.error(`OneService: Error cargando página ${page} (Intento de error consecutivo: ${consecutiveErrors}):`, error.message);
       
-      // Si recibimos un 404, significa que pasamos la última página de la tienda
+      
       if (error.response && error.response.status === 404) {
         console.log('OneService: Página no encontrada (404). Fin del catálogo reached.');
         break;
