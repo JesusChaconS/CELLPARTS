@@ -1,0 +1,88 @@
+/* CELL-PARTS Stylesheet */
+
+/* Animación y transición suave del Drawer Móvil */
+.mobile-drawer-overlay {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-drawer-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-drawer {
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-drawer-overlay.active .mobile-drawer {
+  transform: translateY(0);
+}
+
+/* Range Sliders de precio superpuestos */
+.range-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  height: 6px;
+  outline: none;
+}
+
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  background: #0ea5e9;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: #38bdf8;
+}
+
+.range-input::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 9999px;
+  background: #0ea5e9;
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.range-input::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  background: #38bdf8;
+}
+
+/* Ocultar barra de scroll en contenedores de marca/categorías */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Efectos de tarjeta de producto */
+.product-card-zoom img {
+  transition: transform 0.3s ease;
+}
+.product-card-zoom:hover img {
+  transform: scale(1.04);
+}

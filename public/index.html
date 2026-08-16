@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CELL-PARTS | Comparador de Repuestos e Insumos</title>
+  <meta name="description" content="Compara precios y stock de repuestos de celulares en tiempo real entre los mejores distribuidores mayoristas de Argentina.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              DEFAULT: '#0ea5e9', // sky-500
+              dark: '#0284c7',
+              light: '#38bdf8',
+            },
+            purpleDark: '#4c0d30', // Burgundy/púrpura profundo estilo HardGamers
+            bgPrimary: '#09090b', // zinc-950
+            bgSecondary: '#121214', // zinc-900 oscuro
+            bgTertiary: '#1e1e24', // zinc-800
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Estilos personalizados y animaciones */
+    body {
+      background-color: #09090b;
+      color: #f4f4f5;
+    }
+    
+    /* Scrollbar estética */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+
+    /* Rango de precios con dos deslizadores encimados */
+    .slider-container {
+      position: relative;
+      height: 6px;
+    }
+    .slider-track {
+      position: absolute;
+      height: 100%;
+      background: #27272a;
+      border-radius: 999px;
+      width: 100%;
+      z-index: 1;
+    }
+    .slider-range {
+      position: absolute;
+      height: 100%;
+      background: #0ea5e9;
+      border-radius: 999px;
+      z-index: 2;
+    }
+    .range-input {
+      position: absolute;
+      width: 100%;
+      height: 6px;
+      top: 0;
+      background: none;
+      pointer-events: none;
+      -webkit-appearance: none;
+      appearance: none;
+      z-index: 3;
+    }
+    .range-input::-webkit-slider-thumb {
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #f4f4f5;
+      border: 2px solid #0ea5e9;
+      cursor: pointer;
+      pointer-events: auto;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+  </style>
+</head>
+<body class="h-full font-sans antialiased text-zinc-200">
+  <!-- App Wrapper -->
+  <div class="min-h-screen flex flex-col justify-between">
+    
+    <!-- Top Header (Estilo HardGamers) -->
+    <header class="bg-zinc-950 border-b border-zinc-800 sticky top-0 z-50 px-4 py-3 shadow-lg">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-4 justify-between">
+        
+        <!-- Logo y Navegación izquierda -->
+        <div class="flex items-center justify-between w-full md:w-auto gap-8">
+          <div class="flex items-center gap-2 cursor-pointer" onclick="resetToHome()">
+            <span class="text-2xl">⚡</span>
+            <span class="font-extrabold text-xl tracking-tight text-white flex items-center">
+              CELL<span class="text-brand">PARTS</span>
+            </span>
+          </div>
+          
+          <!-- Menú en computadoras -->
+          <nav class="hidden lg:flex items-center gap-5 text-sm font-semibold text-zinc-400">
+            <button onclick="triggerQuickCategory('Modulo')" class="hover:text-brand transition">Categorías</button>
+            <button onclick="triggerQuickBrand('Samsung')" class="hover:text-brand transition">Marcas</button>
+            <button onclick="openFiltersDrawer()" class="hover:text-brand transition">Tiendas</button>
+            <span class="text-zinc-700">|</span>
+            <span class="text-xs px-2 py-0.5 bg-brand/10 border border-brand/20 text-brand rounded-full">Gremio</span>
+          </nav>
+
+          <div class="flex items-center gap-2 md:hidden">
+            <!-- Servidor status móvil -->
+            <div id="serverStatusMobile" class="flex items-center gap-1.5 text-xs text-zinc-500 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Online</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buscador Central Redondeado (Estilo HardGamers Lupa) -->
+        <div class="relative w-full max-w-lg">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </div>
+          <input type="text" id="searchInput" placeholder="Buscar repuestos, marcas o insumos (ej. Batería A03)..." 
+                 class="w-full bg-zinc-900/80 border border-zinc-800 text-sm text-white placeholder-zinc-500 pl-10 pr-10 py-2.5 rounded-full outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all">
+          <button id="clearSearchBtn" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-500 hover:text-white hidden">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+
+        <!-- Acciones Derecha -->
+        <div class="hidden md:flex items-center gap-4">
+          <div id="serverStatus" class="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full shadow-inner">
+            <span class="status-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="status-text">Conectado</span>
+          </div>
+          <div class="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 cursor-pointer hover:bg-zinc-700 transition">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 md:py-8">
+      
+      <!-- PORTADA DE INICIO (Estilo HardGamers Home Banners) -->
+      <section id="homePromoSection" class="space-y-8">
+        
+        <!-- Grilla de Paneles Especiales -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          
+          <!-- Banner Principal (2 columnas de ancho) -->
+          <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[220px] md:min-h-[280px]">
+            <div class="absolute inset-0 bg-gradient-to-r from-sky-950/40 via-transparent to-transparent opacity-80 z-0"></div>
+            <!-- Círculo brillante de fondo -->
+            <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-brand/10 blur-3xl group-hover:bg-brand/20 transition-all duration-700"></div>
+            
+            <div class="z-10">
+              <span class="text-xs font-extrabold text-brand uppercase tracking-widest bg-brand/10 px-2.5 py-1 rounded-full border border-brand/20">MEJORES MODULOS</span>
+              <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-4 leading-tight">
+                TU PRÓXIMO UPGRADE<br>
+                ESTÁ EN <span class="text-brand">CELL-PARTS</span>
+              </h2>
+              <p class="text-zinc-400 text-xs mt-2 max-w-sm">Compara y adquiere repuestos directos del gremio en las principales importadoras.</p>
+            </div>
+            
+            <div class="z-10 mt-6 md:mt-0 flex items-center justify-between">
+              <span class="text-xs text-zinc-500 font-semibold">Mundo Parts • Fast Cheap • i2C • Uniontools • OneService</span>
+              <button onclick="triggerQuickCategory('Modulo')" class="bg-brand hover:bg-brand-dark text-zinc-950 font-bold text-xs px-4 py-2 rounded-lg transition-all shadow-md shadow-brand/20">Ver Ofertas</button>
+            </div>
+          </div>
+
+          <!-- Card 2: Outlet -->
+          <div class="relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent z-0"></div>
+            <div class="absolute -bottom-8 -right-8 w-24 h-24 rounded-full bg-yellow-500/5 blur-2xl group-hover:bg-yellow-500/10 transition-all duration-500"></div>
+            
+            <div class="z-10">
+              <h3 class="text-lg font-bold text-white leading-tight">Insumos y Adhesivos</h3>
+              <p class="text-zinc-400 text-xs mt-1">Pegamentos, cintas y limpiadores al menor costo.</p>
+            </div>
+            <div class="z-10 mt-6 flex items-center justify-between">
+              <span class="text-xs text-yellow-500 font-extrabold uppercase tracking-wide">Outlet</span>
+              <button onclick="triggerQuickCategory('Pegamento')" class="text-xs font-bold text-white hover:text-brand flex items-center gap-1 transition">
+                Descubrí Más <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Vertical/Banner Setup AULA -->
+          <div class="md:row-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[260px] md:min-h-full">
+            <div class="absolute inset-0 bg-gradient-to-b from-purpleDark/20 to-zinc-950 z-0"></div>
+            <div class="absolute -top-12 -left-12 w-28 h-28 rounded-full bg-brand/10 blur-3xl group-hover:bg-brand/20 transition-all"></div>
+            
+            <div class="z-10">
+              <span class="text-[10px] font-extrabold text-pink-400 uppercase tracking-widest">Premium Tools</span>
+              <h3 class="text-xl font-black text-white mt-3 uppercase leading-tight tracking-wider">
+                Equipá tu<br>laboratorio
+              </h3>
+              <p class="text-zinc-400 text-xs mt-2">Estaciones de soldado, microscopios, multímetros e instrumental del gremio técnico.</p>
+            </div>
+            
+            <div class="z-10 mt-8">
+              <div class="bg-zinc-800/80 border border-zinc-700/80 p-3.5 rounded-xl text-center group-hover:border-brand/40 transition">
+                <span class="text-xs font-semibold text-zinc-300 block mb-1">Marcas Destacadas</span>
+                <span class="text-sm font-extrabold text-brand tracking-widest block">SUNSHINE • YAXUN • JCID</span>
+              </div>
+              <button onclick="triggerQuickCategory('Herramientas')" class="w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs py-2.5 rounded-lg mt-4 transition border border-zinc-700">Ver Herramientas</button>
+            </div>
+          </div>
+
+          <!-- Card 4: Accesorios -->
+          <div class="relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent z-0"></div>
+            
+            <div class="z-10">
+              <h3 class="text-lg font-bold text-white leading-tight">Baterías Alta Capacidad</h3>
+              <p class="text-zinc-400 text-xs mt-1">Baterías homologadas con y sin flex.</p>
+            </div>
+            <div class="z-10 mt-6 flex items-center justify-between">
+              <span class="text-xs text-brand-light font-extrabold uppercase tracking-wide">Stock Completo</span>
+              <button onclick="triggerQuickCategory('Bateria')" class="text-xs font-bold text-white hover:text-brand flex items-center gap-1 transition">
+                Explorar <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 5: Bajaron de Precio -->
+          <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 p-6 flex flex-col justify-between overflow-hidden group min-h-[180px]">
+            <div class="absolute inset-0 bg-gradient-to-r from-emerald-950/20 to-transparent z-0"></div>
+            
+            <div class="z-10">
+              <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 uppercase tracking-widest">Oportunidades</span>
+              <h3 class="text-xl font-bold text-white mt-3">Mejores Rebajas Recientes</h3>
+              <p class="text-zinc-400 text-xs mt-1 max-w-md">Monitoreamos las caídas de precios de repuestos de alta rotación en las últimas 24 horas.</p>
+            </div>
+            <div class="z-10 mt-6 flex items-center justify-between">
+              <span class="text-xs text-emerald-400 font-extrabold">↓ Bajaron de Precio</span>
+              <button onclick="triggerSortBy('price-asc')" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs px-4 py-2 rounded-lg transition border border-zinc-700">Explorar Ofertas</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Marcas / Proveedores Banner Row (Logotipos) -->
+        <div class="bg-zinc-950/50 border border-zinc-800/80 rounded-2xl py-6 px-8">
+          <h4 class="text-center text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-4">Distribuidores Indexados en Tiempo Real</h4>
+          <div class="flex flex-wrap items-center justify-center gap-6 md:gap-12 opacity-75 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500" id="distributorLogosBar">
+            <img src="/image/MundoParts.webp" alt="Mundo Parts" class="h-8 md:h-10 object-contain cursor-pointer hover:scale-105 transition" onclick="triggerQuickProvider('mundoparts')" title="Filtrar por Mundo Parts">
+            <img src="/image/FastCheap.png" alt="Fast Cheap" class="h-8 md:h-10 object-contain cursor-pointer hover:scale-105 transition" onclick="triggerQuickProvider('fastcheap')" title="Filtrar por Fast Cheap">
+            <img src="/image/I2C.jpg" alt="i2C Mayorista" class="h-8 md:h-10 object-contain cursor-pointer hover:scale-105 transition" onclick="triggerQuickProvider('i2c')" title="Filtrar por i2C Mayorista">
+            <img src="/image/UnionTools.webp" alt="Uniontools" class="h-8 md:h-10 object-contain cursor-pointer hover:scale-105 transition" onclick="triggerQuickProvider('uniontools')" title="Filtrar por Uniontools">
+            <img src="/image/OneService.jpg" alt="OneService" class="h-8 md:h-10 object-contain cursor-pointer hover:scale-105 transition" onclick="triggerQuickProvider('oneservice')" title="Filtrar por OneService">
+          </div>
+        </div>
+
+        <!-- Categorías Populares (Estilo HardGamers Categorías Púrpura) -->
+        <div>
+          <div class="bg-purpleDark border border-purple-900/50 rounded-2xl p-6 shadow-inner flex flex-col md:flex-row md:items-center justify-between gap-6" id="popularCategoriesBar">
+            <div>
+              <h3 class="text-lg font-extrabold text-white">Categorías Populares</h3>
+              <p class="text-pink-200/60 text-xs">Filtra tu stock con un solo clic.</p>
+            </div>
+            
+            <div class="flex flex-wrap gap-2 md:gap-3">
+              <button onclick="triggerQuickCategory('Modulo')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>📱</span> Módulos
+              </button>
+              <button onclick="triggerQuickCategory('Bateria')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>🔋</span> Baterías
+              </button>
+              <button onclick="triggerQuickCategory('Flex')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>🔌</span> Cables Flex
+              </button>
+              <button onclick="triggerQuickCategory('Pin de Carga')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>⚡</span> Pines de Carga
+              </button>
+              <button onclick="triggerQuickCategory('Tapa')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>🛡️</span> Tapas
+              </button>
+              <button onclick="triggerQuickCategory('Herramientas')" class="flex items-center gap-2 bg-zinc-950/40 hover:bg-zinc-950/80 border border-purple-900/40 hover:border-brand text-xs font-bold text-white px-4 py-3 rounded-xl transition-all">
+                <span>🛠️</span> Herramientas
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SECCION DE RESULTADOS CON FILTROS AVANZADOS (Estilo Grilla de Teclados) -->
+      <section id="searchResultSection" class="hidden">
+        
+        <!-- Encabezado de la Búsqueda y Ordenamiento -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-4 mb-6 gap-4">
+          <div>
+            <h2 class="text-zinc-400 text-sm font-medium" id="resultsCount">Cargando catálogo...</h2>
+          </div>
+          
+          <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end" id="resultsSortingContainer">
+            <span class="text-xs text-zinc-500 font-semibold">Ordenar por:</span>
+            <select id="sortBySelect" class="bg-zinc-900 border border-zinc-800 text-xs text-white px-3 py-2 rounded-lg outline-none focus:border-brand">
+              <option value="price-asc">Menor precio</option>
+              <option value="price-desc">Mayor precio</option>
+              <option value="scraped_at-desc">Recientes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          
+          <!-- FILTROS SIDEBAR (Izquierda - Escritorio) -->
+          <aside class="hidden lg:block bg-zinc-900 border border-zinc-800 rounded-2xl p-5 sticky top-24 space-y-6">
+            
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+              <h3 class="font-bold text-zinc-200 text-sm uppercase tracking-wider">Filtros</h3>
+              <button onclick="clearAllFilters()" class="text-zinc-500 hover:text-brand text-xs font-semibold transition">Limpiar todo</button>
+            </div>
+
+            <!-- Filtro: Rango de Precio -->
+            <div class="space-y-3">
+              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Precio</h4>
+              
+              <!-- Inputs de Texto Mín/Máx -->
+              <div class="flex gap-2">
+                <div class="bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 flex items-center w-1/2">
+                  <span class="text-zinc-600 text-xs mr-1">$</span>
+                  <input type="number" id="minPriceInput" class="bg-transparent text-xs text-white w-full outline-none" placeholder="Min">
+                </div>
+                <div class="bg-zinc-950 border border-zinc-800 rounded-lg px-2 py-1.5 flex items-center w-1/2">
+                  <span class="text-zinc-600 text-xs mr-1">$</span>
+                  <input type="number" id="maxPriceInput" class="bg-transparent text-xs text-white w-full outline-none" placeholder="Max">
+                </div>
+              </div>
+              
+              <!-- Slider doble de precios -->
+              <div class="pt-2 px-1">
+                <div class="slider-container">
+                  <div class="slider-track" id="sliderTrack"></div>
+                  <div class="slider-range" id="sliderRange"></div>
+                  <input type="range" id="priceRangeSliderMin" class="range-input" min="0" max="1000000" value="0">
+                  <input type="range" id="priceRangeSliderMax" class="range-input" min="0" max="1000000" value="1000000">
+                </div>
+              </div>
+
+              <button id="applyPriceFilterBtn" class="w-full bg-zinc-800 hover:bg-brand text-zinc-300 hover:text-zinc-950 text-xs font-bold py-2 rounded-lg transition border border-zinc-700 hover:border-brand">
+                Aplicar Precio
+              </button>
+            </div>
+
+            <!-- Filtro: Distribuidores (Checkboxes) -->
+            <div class="space-y-2 border-t border-zinc-800 pt-4">
+              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
+              <div class="space-y-1.5" id="providerFilterCheckboxes">
+                <!-- Inyectados dinámicamente con checkbox y contadores -->
+              </div>
+            </div>
+
+            <!-- Filtro: Marcas (Checkboxes) -->
+            <div class="space-y-2 border-t border-zinc-800 pt-4">
+              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
+              <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="brandFilterCheckboxes">
+                <!-- Inyectados dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Filtro: Categorías (Checkboxes) -->
+            <div class="space-y-2 border-t border-zinc-800 pt-4">
+              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
+              <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="categoryFilterCheckboxes">
+                <!-- Inyectados dinámicamente -->
+              </div>
+            </div>
+          </aside>
+
+          <!-- GRID DE RESULTADOS (Derecha - Grilla estilo Teclados) -->
+          <div class="lg:col-span-3 space-y-6">
+            
+            <!-- Loading State -->
+            <div class="loading-state hidden py-16 flex flex-col items-center justify-center bg-zinc-900/50 border border-zinc-800 rounded-2xl" id="loadingState">
+              <div class="w-10 h-10 border-4 border-brand border-t-transparent rounded-full animate-spin"></div>
+              <p class="text-zinc-400 text-sm mt-4 font-semibold">Buscando las mejores ofertas...</p>
+            </div>
+
+            <!-- Empty/Zero Results State -->
+            <div class="empty-state hidden py-16 flex flex-col items-center justify-center bg-zinc-900/50 border border-zinc-800 rounded-2xl text-center" id="emptyState">
+              <div class="text-4xl">🔍</div>
+              <h3 class="empty-title text-lg font-bold text-white mt-4">Sin resultados</h3>
+              <p class="empty-description text-zinc-400 text-xs mt-1 max-w-sm">No encontramos repuestos que coincidan con los filtros seleccionados. Intenta otra búsqueda.</p>
+            </div>
+
+            <!-- Grid de productos -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="exploreGrid">
+              <!-- Las tarjetas se inyectan aquí dinámicamente -->
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination-container hidden flex items-center justify-center gap-4 bg-zinc-900 border border-zinc-800 p-4 rounded-2xl" id="paginationContainer">
+              <button class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold px-4 py-2.5 rounded-lg border border-zinc-700 transition" id="prevPageBtn" disabled>Anterior</button>
+              <span class="pagination-info text-xs font-semibold text-zinc-400" id="paginationInfo">Página 1 de 1</span>
+              <button class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold px-4 py-2.5 rounded-lg border border-zinc-700 transition" id="nextPageBtn" disabled>Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer de CELL-PARTS -->
+    <footer class="bg-zinc-950 border-t border-zinc-800 py-6 px-4 text-center mt-12 hidden lg:block">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+        <span>&copy; 2026 CELL-PARTS. Comparador mayorista para gremio técnico y reparación.</span>
+        <div class="flex gap-4">
+          <a href="#" class="hover:text-zinc-300 transition">Términos de Servicio</a>
+          <a href="#" class="hover:text-zinc-300 transition">Política de Privacidad</a>
+          <a href="#" class="hover:text-zinc-300 transition" onclick="resetToHome()">Volver al Inicio</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Barra de Navegación Móvil (Táctil) -->
+    <nav class="mobile-nav-bar lg:hidden fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur border-t border-zinc-800 py-2.5 px-6 flex justify-around items-center z-50 shadow-2xl">
+      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavSearch">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <span class="text-[9px] font-semibold">Buscar</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavFilters" onclick="openFiltersDrawer()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><circle cx="4" cy="12" r="2"></circle><circle cx="12" cy="10" r="2"></circle><circle cx="20" cy="14" r="2"></circle></svg>
+        <span class="text-[9px] font-semibold">Filtros</span>
+      </button>
+      <button class="mobile-nav-item flex flex-col items-center gap-1 text-zinc-500 hover:text-brand transition" id="mobileNavUpdate" onclick="triggerScrapeMobile()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        <span class="text-[9px] font-semibold">Actualizar</span>
+      </button>
+    </nav>
+
+    <!-- Cajón Deslizable de Filtros Móvil (Slide-Up Drawer) -->
+    <div class="mobile-drawer-overlay fixed inset-0 bg-black/60 z-[100] transition-opacity duration-300 ease-out hidden" id="filterDrawerOverlay">
+      <div class="mobile-drawer fixed bottom-0 left-0 right-0 bg-zinc-950 border-t border-zinc-800 rounded-t-3xl max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl transition-transform duration-300 ease-out translate-y-full" id="filterDrawer">
+        
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+          <h3 class="font-extrabold text-sm uppercase tracking-wider text-white">Filtros Avanzados</h3>
+          <div class="flex items-center gap-3">
+            <button onclick="clearAllFilters()" class="text-zinc-500 hover:text-brand text-xs font-semibold transition">Limpiar</button>
+            <button onclick="closeFiltersDrawer()" class="bg-brand text-zinc-950 text-xs font-extrabold px-3 py-1.5 rounded-lg transition-all">Listo</button>
+          </div>
+        </div>
+
+        <!-- Móvil: Rango de precio -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Rango de Precio</h4>
+          <div class="flex gap-2">
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 flex items-center w-1/2">
+              <span class="text-zinc-600 text-xs mr-1">$</span>
+              <input type="number" id="minPriceInputMobile" class="bg-transparent text-xs text-white w-full outline-none" placeholder="Min">
+            </div>
+            <div class="bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 flex items-center w-1/2">
+              <span class="text-zinc-600 text-xs mr-1">$</span>
+              <input type="number" id="maxPriceInputMobile" class="bg-transparent text-xs text-white w-full outline-none" placeholder="Max">
+            </div>
+          </div>
+          
+          <div class="pt-2 px-1">
+            <div class="slider-container">
+              <div class="slider-track" id="sliderTrackMobile"></div>
+              <div class="slider-range" id="sliderRangeMobile"></div>
+              <input type="range" id="priceRangeSliderMinMobile" class="range-input" min="0" max="1000000" value="0">
+              <input type="range" id="priceRangeSliderMaxMobile" class="range-input" min="0" max="1000000" value="1000000">
+            </div>
+          </div>
+
+          <button id="applyPriceFilterBtnMobile" class="w-full bg-brand text-zinc-950 text-xs font-bold py-2.5 rounded-lg transition-all">
+            Aplicar Rango de Precio
+          </button>
+        </div>
+
+        <!-- Móvil: Distribuidores (Checkboxes) -->
+        <div class="space-y-2 border-t border-zinc-800 pt-4">
+          <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
+          <div class="space-y-1.5" id="providerFilterCheckboxesMobile">
+            <!-- Inyectados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Móvil: Marcas (Checkboxes) -->
+        <div class="space-y-2 border-t border-zinc-800 pt-4">
+          <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
+          <div class="space-y-1.5 max-h-40 overflow-y-auto" id="brandFilterCheckboxesMobile">
+            <!-- Inyectados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Móvil: Categorías (Checkboxes) -->
+        <div class="space-y-2 border-t border-zinc-800 pt-4">
+          <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
+          <div class="space-y-1.5 max-h-40 overflow-y-auto" id="categoryFilterCheckboxesMobile">
+            <!-- Inyectados dinámicamente -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Toast/Notification -->
+    <div class="toast-notification hidden fixed top-5 right-5 z-[200] bg-zinc-900 border border-zinc-800 text-xs text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-bounce" id="toastNotification">
+      <span class="toast-icon">🔄</span>
+      <span class="toast-text">Actualizando base de datos...</span>
+    </div>
+  </div>
+
+  <!-- JS Logic -->
+  <script src="index.js"></script>
+</body>
+</html>
