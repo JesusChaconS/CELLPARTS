@@ -109,8 +109,8 @@ async function syncWithRemote() {
     const products = await db.getProducts({ limit: 100000 });
     console.log(`Sincronización: Se encontraron ${products.length} productos locales para sincronizar.`);
     
-    // Subir en lotes de 250 productos
-    const batchSize = 250;
+    // Subir en lotes de 100 productos
+    const batchSize = 100;
     for (let i = 0; i < products.length; i += batchSize) {
       const batch = products.slice(i, i + batchSize);
       console.log(`Sincronización: Enviando lote ${Math.floor(i / batchSize) + 1} (${batch.length} productos)...`);

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "scrape": "node src/scrapers/run.js"
+    "scrape": "node src/scrapers/run.js",
+    "sync": "node src/scrapers/sync.js"
   },
   "keywords": [],
   "author": "",
