@@ -607,15 +607,9 @@ function renderExplore(products, pagination) {
     
     if (index === 6) {
       const sponsoredCard = document.createElement('div');
-      sponsoredCard.className = 'col-span-2 md:col-span-3 relative rounded-2xl border border-zinc-800 overflow-hidden min-h-[140px] flex items-center p-6 group';
+      sponsoredCard.className = 'col-span-2 md:col-span-3 relative rounded-2xl border border-zinc-850 overflow-hidden bg-zinc-950 flex items-center justify-center p-0 min-h-[130px] max-h-[160px]';
       sponsoredCard.innerHTML = `
-        <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico CELLPARTS" class="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:scale-102 transition duration-700">
-        <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/60 to-transparent z-10"></div>
-        <div class="relative z-20 max-w-lg">
-          <span class="text-[9px] font-bold text-brand bg-brand/10 border border-brand/20 px-2.5 py-0.5 rounded uppercase tracking-widest">Laboratorio CELLPARTS</span>
-          <h4 class="text-base font-extrabold text-white mt-1.5">¿Necesitás reparar una placa o cambiar un glass?</h4>
-          <p class="text-zinc-400 text-xs mt-0.5">Servicio técnico express para el gremio con equipamiento de alta precisión y microsoldadura.</p>
-        </div>
+        <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico CELLPARTS" class="w-full h-full object-cover">
       `;
       exploreGrid.appendChild(sponsoredCard);
     }
@@ -767,5 +761,22 @@ function showToast(message) {
         toast.classList.add('hidden');
       }
     }, 4000);
+  }
+}
+
+// Funciones para el Modal de Descargo de Responsabilidad (Disclaimer)
+function openDisclaimerModal() {
+  const modal = document.getElementById('disclaimerModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeDisclaimerModal() {
+  const modal = document.getElementById('disclaimerModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
   }
 }

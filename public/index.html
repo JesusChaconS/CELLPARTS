@@ -263,15 +263,8 @@
           </div>
 
           <!-- Banner Servicio Técnico (cellpartsBAN) -->
-          <div class="md:col-span-2 relative bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden group min-h-[180px] flex flex-col justify-end p-6">
-            <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico Cellparts" class="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-102 transition-transform duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent z-10"></div>
-            
-            <div class="relative z-20">
-              <span class="text-[9px] font-bold text-brand bg-brand/10 px-2.5 py-1 rounded border border-brand/20 uppercase tracking-widest inline-block">Laboratorio CELLPARTS</span>
-              <h3 class="text-xl font-black text-white mt-2 leading-tight">Servicio Técnico de Alta Complejidad</h3>
-              <p class="text-zinc-300 text-xs mt-1 max-w-lg">Diagnósticos avanzados, microsoldadura, cambio de integrado de carga y reparación de placa para el gremio técnico.</p>
-            </div>
+          <div class="md:col-span-2 relative bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden flex items-center justify-center p-0 min-h-[180px]">
+            <img src="/image/cellpartsBAN.webp" alt="Servicio Técnico Cellparts" class="w-full h-full object-cover rounded-2xl">
           </div>
         </div>
 
@@ -375,21 +368,21 @@
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
               <div class="space-y-1.5" id="providerFilterCheckboxes">
-                
+                <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
               </div>
             </div>
 
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
               <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="brandFilterCheckboxes">
-                
+                <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
               </div>
             </div>
 
             <div class="space-y-2 border-t border-zinc-800 pt-4">
               <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
               <div class="space-y-1.5 max-h-40 overflow-y-auto pr-1" id="categoryFilterCheckboxes">
-                
+                <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
               </div>
             </div>
           </aside>
@@ -422,14 +415,49 @@
 
     </main>
 
-    <footer class="bg-zinc-950 border-t border-zinc-800 py-6 px-4 text-center mt-12 hidden lg:block">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-        <span>&copy; 2026 CELL-PARTS. Comparador mayorista para gremio técnico y reparación.</span>
-        <div class="flex gap-4">
-          <a href="#" class="hover:text-zinc-300 transition">Términos de Servicio</a>
-          <a href="#" class="hover:text-zinc-300 transition">Política de Privacidad</a>
-          <a href="#" class="hover:text-zinc-300 transition" onclick="resetToHome()">Volver al Inicio</a>
+    <!-- Footer Premium Expandido -->
+    <footer class="bg-zinc-950 border-t border-zinc-800 pt-12 pb-24 md:pb-12 px-6 mt-16 text-zinc-400">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+        <!-- Columna 1: Info del Negocio -->
+        <div class="space-y-3 text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start gap-2">
+            <span class="text-xl">⚡</span>
+            <span class="font-extrabold text-lg tracking-tight text-white">
+              CELL<span class="text-brand">PARTS</span>
+            </span>
+          </div>
+          <p class="text-xs text-zinc-500">Comparador de precios mayoristas de repuestos y herramientas para el gremio técnico de reparación de celulares.</p>
+          <div class="text-xs text-zinc-550 pt-2">
+            Desarrollado con ❤️ por <span class="text-zinc-300 font-bold">Jeus</span>
+          </div>
         </div>
+
+        <!-- Columna 2: Contacto y Redes -->
+        <div class="space-y-3 text-center">
+          <h4 class="font-bold text-white uppercase tracking-wider text-xs">Contacto de Soporte</h4>
+          <div class="flex flex-col items-center gap-2">
+            <a href="https://wa.me/5493518101443" target="_blank" class="flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition text-xs font-semibold">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm5.835-4.117c1.661.986 3.292 1.48 4.905 1.481 5.482 0 9.95-4.466 9.952-9.948.001-2.656-1.03-5.153-2.905-7.03C15.969 2.508 13.482 1.48 10.826 1.48 5.345 1.48.878 5.946.875 11.429c-.001 1.693.456 3.344 1.32 4.825L1.185 22.1l6.012-1.577z"/></svg>
+              +54 9 351 810 1443
+            </a>
+            <a href="mailto:jeus.chacon12@outlook.com" class="flex items-center gap-2 text-brand hover:text-brand-light transition text-xs font-semibold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              jeus.chacon12@outlook.com
+            </a>
+          </div>
+        </div>
+
+        <!-- Columna 3: Información Legal -->
+        <div class="space-y-3 text-center md:text-right">
+          <h4 class="font-bold text-white uppercase tracking-wider text-xs">Información</h4>
+          <div class="flex flex-col items-center md:items-end gap-2 text-xs">
+            <button onclick="openDisclaimerModal()" class="hover:text-zinc-200 transition underline underline-offset-4 decoration-zinc-800">Descargo de Responsabilidad</button>
+            <a href="#" class="hover:text-zinc-200 transition" onclick="resetToHome()">Volver al Inicio</a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-zinc-900 mt-8 pt-6 text-center text-xs text-zinc-600">
+        &copy; 2026 CELL-PARTS. Todos los derechos reservados.
       </div>
     </footer>
 
@@ -485,22 +513,54 @@
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Distribuidores</h4>
           <div class="space-y-1.5" id="providerFilterCheckboxesMobile">
-            
+            <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
           </div>
         </div>
 
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Marcas</h4>
           <div class="space-y-1.5 max-h-40 overflow-y-auto" id="brandFilterCheckboxesMobile">
-            
+            <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
           </div>
         </div>
 
         <div class="space-y-2 border-t border-zinc-800 pt-4">
           <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wide">Categorías</h4>
           <div class="space-y-1.5 max-h-40 overflow-y-auto" id="categoryFilterCheckboxesMobile">
-            
+            <p class="text-zinc-600 text-xs italic py-1 animate-pulse">Cargando...</p>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Descargo de Responsabilidad (Disclaimer) -->
+    <div id="disclaimerModal" class="fixed inset-0 bg-black/80 z-[300] backdrop-blur-sm flex items-center justify-center p-4 hidden">
+      <div class="bg-zinc-950 border border-zinc-800 rounded-3xl max-w-xl w-full p-6 space-y-4 shadow-2xl relative">
+        <button onclick="closeDisclaimerModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        
+        <div class="flex items-center gap-2 border-b border-zinc-800 pb-3">
+          <span class="text-xl">⚖️</span>
+          <h3 class="text-lg font-extrabold text-white uppercase tracking-wide">Descargo de Responsabilidad</h3>
+        </div>
+        
+        <div class="space-y-3 text-zinc-400 text-xs leading-relaxed max-h-[60vh] overflow-y-auto pr-1 scrollbar-thin">
+          <p class="font-semibold text-zinc-200">Por favor, lea atentamente los siguientes términos antes de utilizar la plataforma CELL-PARTS:</p>
+          
+          <p>1. <strong>Naturaleza del Servicio:</strong> CELL-PARTS es una herramienta gratuita de comparación de catálogos automatizada. Recopila información pública de precios y stock de proveedores mayoristas independientes en Argentina.</p>
+          
+          <p>2. <strong>Precisión de los Datos:</strong> Los datos se actualizan de manera periódica. No obstante, dado que los precios y el stock de los proveedores fluctúan en tiempo real, no garantizamos que la información mostrada sea 100% exacta o libre de errores en el momento de su consulta.</p>
+          
+          <p>3. <strong>Transacciones Comerciales:</strong> CELL-PARTS no comercializa repuestos ni interviene en los pagos, envíos o negociaciones. Cualquier compra o contacto comercial se realiza de forma directa y exclusiva entre el técnico y el distribuidor correspondiente.</p>
+          
+          <p>4. <strong>Exención de Responsabilidad:</strong> No nos hacemos responsables por pérdidas comerciales, fallos en garantías de repuestos, inconvenientes de stock o discrepancias de facturación originadas de compras realizadas a las importadoras indexadas.</p>
+          
+          <p class="text-zinc-300 font-semibold pt-2">Al utilizar esta web, usted comprende y acepta que debe verificar siempre la información con el proveedor antes de realizar cualquier transacción.</p>
+        </div>
+        
+        <div class="pt-3 border-t border-zinc-800 flex justify-end">
+          <button onclick="closeDisclaimerModal()" class="bg-brand text-zinc-950 text-xs font-black px-5 py-2 rounded-xl transition shadow hover:bg-brand-light">Entendido y Acepto</button>
         </div>
       </div>
     </div>
